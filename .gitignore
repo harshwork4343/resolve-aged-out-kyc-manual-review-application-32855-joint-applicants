@@ -3,7 +3,8 @@ _REMOVE_BEFORE_SUBMISSION/
 
 # --- Run outputs (regenerable, large) ---
 jobs/
-evaluations/
+# NOTE: evaluations/ is NOT ignored — it is a required part of the submission
+# package (playbook 8.2). Only jobs/ (the raw harbor output) is ignored.
 
 # --- Old / superseded configs and reports ---
 old-glm-configs/

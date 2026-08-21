@@ -1,0 +1,1052 @@
+{
+  "total": 0.6667,
+  "pass": false,
+  "threshold": 1.0,
+  "composite": 0.6667,
+  "mode": "benchmark",
+  "allowed_verifier_types": [
+    "agentic_llm_as_judge"
+  ],
+  "weights": {
+    "state": 0.5,
+    "sql": 0.25,
+    "rubric": 0.25
+  },
+  "state": {
+    "enabled": false,
+    "score": null,
+    "matched_expected": 0,
+    "soft_unauthorized": 0,
+    "hard_unauthorized": 0
+  },
+  "sql": {
+    "enabled": false,
+    "score": null,
+    "passed": 0,
+    "total": 0,
+    "verifiers": []
+  },
+  "rubric": {
+    "enabled": true,
+    "score": 0.6667,
+    "prompt_version": "v2.1-likert",
+    "mode": "benchmark",
+    "core_passed": false,
+    "weighted_pass_rate": 0.6667,
+    "failure_mode": "wrong_answer",
+    "items": [
+      {
+        "passed": false,
+        "reward": 0.8,
+        "threshold": 1.0,
+        "workspace_files": [
+          "metrics.json",
+          "report.md"
+        ],
+        "summary": {
+          "total_verifiers": 10,
+          "passed": 8,
+          "failed": 2,
+          "errored": 0,
+          "total_weight": 1.0,
+          "passed_weight": 0.8
+        },
+        "assertion_results": [
+          {
+            "name": "metrics_json_exists",
+            "definition": {
+              "metadata": {
+                "how_justification": "Checks metrics.json is present as a file in the workspace.",
+                "why_justification": "The machine-readable summary is a required deliverable."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "filesystem",
+                  "command": "check_path_exists",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": true,
+                "deterministic": {
+                  "path": "$.is_file",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": true,
+              "actual": true,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.is_file",
+                "matched_values": [
+                  true
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_cohort_size",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts cohort_size equals 116.",
+                "why_justification": "Scoping the cohort is load-bearing: filtering on status instead of original_status, or ignoring account_type='joint', changes it."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 116,
+                "deterministic": {
+                  "path": "$.cohort_size",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": false,
+              "expected": 116,
+              "actual": 115,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": "assertion failed",
+              "evaluation": {
+                "path": "$.cohort_size",
+                "matched_values": [
+                  115
+                ],
+                "comparison": "equals",
+                "source_output_preview": "{\"sweep_date\": \"2025-04-09\", \"cohort_size\": 115, \"aged_out\": 50, \"resolved_before_sweep\": 64, \"still_manual_review\": 1, \"unresolved_person_kyc\": 68, \"both_applicants_unresolved\": 18, \"days_in_manual_review\": 309}"
+              }
+            }
+          },
+          {
+            "name": "metrics_aged_out",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts aged_out equals 50.",
+                "why_justification": "Identifying the single backlog-closeout date and counting only its applications is the core finding."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 50,
+                "deterministic": {
+                  "path": "$.aged_out",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": 50,
+              "actual": 50,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.aged_out",
+                "matched_values": [
+                  50
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_resolved_before_sweep",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts resolved_before_sweep equals 65.",
+                "why_justification": "The merits-decided remainder must exclude both the sweep and the never-decisioned application."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 65,
+                "deterministic": {
+                  "path": "$.resolved_before_sweep",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": false,
+              "expected": 65,
+              "actual": 64,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": "assertion failed",
+              "evaluation": {
+                "path": "$.resolved_before_sweep",
+                "matched_values": [
+                  64
+                ],
+                "comparison": "equals",
+                "source_output_preview": "{\"sweep_date\": \"2025-04-09\", \"cohort_size\": 115, \"aged_out\": 50, \"resolved_before_sweep\": 64, \"still_manual_review\": 1, \"unresolved_person_kyc\": 68, \"both_applicants_unresolved\": 18, \"days_in_manual_review\": 309}"
+              }
+            }
+          },
+          {
+            "name": "metrics_unresolved_person_kyc",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts unresolved_person_kyc equals 68.",
+                "why_justification": "Requires the person-level join; counting applications rather than applicant KYC records gets it wrong."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 68,
+                "deterministic": {
+                  "path": "$.unresolved_person_kyc",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": 68,
+              "actual": 68,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.unresolved_person_kyc",
+                "matched_values": [
+                  68
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_both_applicants_unresolved",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts both_applicants_unresolved equals 18.",
+                "why_justification": "Separating both-applicants-stuck from one-applicant-stuck requires a per-application having clause."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 18,
+                "deterministic": {
+                  "path": "$.both_applicants_unresolved",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": 18,
+              "actual": 18,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.both_applicants_unresolved",
+                "matched_values": [
+                  18
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_days_in_manual_review",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts days_in_manual_review equals 309.",
+                "why_justification": "The elapsed time for application 32855 proves the aging-out reading of its rejection."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 309,
+                "deterministic": {
+                  "path": "$.days_in_manual_review",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": 309,
+              "actual": 309,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.days_in_manual_review",
+                "matched_values": [
+                  309
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "report_md_exists",
+            "definition": {
+              "metadata": {
+                "how_justification": "Checks report.md is present as a file in the workspace.",
+                "why_justification": "The written brief is a required deliverable."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "filesystem",
+                  "command": "check_path_exists",
+                  "arguments": {
+                    "path": "report.md"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": true,
+                "deterministic": {
+                  "path": "$.is_file",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": true,
+              "actual": true,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.is_file",
+                "matched_values": [
+                  true
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "report_mentions_example_application",
+            "definition": {
+              "metadata": {
+                "how_justification": "Extracts report.md text and asserts it works the 32855 example.",
+                "why_justification": "The brief must ground the finding in the specific application that triggered the escalation."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "md",
+                  "command": "extract_text",
+                  "arguments": {
+                    "path": "report.md"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": "32855",
+                "deterministic": {
+                  "path": "$.text",
+                  "comparison": "contains"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": "32855",
+              "actual": "# Joint Application 32855 \u2014 Backlog Closeout vs. Merits Review\n\n## Bottom line\nApplication **32855 was not decided on its merits.** It was swept up in a single\nbacklog closeout on **2025-04-09** that bulk-rejected long-stuck joint applications.\nIn the June-2024 cohort around 32855, **50 of 115** applications were disposed of on\nthat one day \u2014 every one of them rejected \u2014 after sitting in manual review for\n~9\u201310 months. Critically, the closeout closed the *account* applications while leaving\nmost of the underlying person KYC checks un-adjudicated: **68 of 100** applicants in the\nswept set were still in `manual_review` when their application was rejected, and\n**18 of the 50** swept applications had **both** applicants still stuck.\n\n## Method\nAll figures come from the `zeta3` warehouse (catalog `zeta3`, schema `rds`), not from\npolicy pages. Source tables:\n- `account_applications` \u2014 the account-level application (status, `original_status`,\n  `manual_review_mailers_sent_at`, `final_decisioned_at`, `account_type`).\n- `account_person_applications` \u2014 join table (`person_application_id` \u2194 `account_application_id`).\n- `person_applications` \u2014 per-applicant record carrying `kyc_status` / `initial_kyc_status` /\n  `kyced_at`.\n- `kyc_data` \u2014 the KYC vendor outcome (`outcome`, `outcome_reasons`, `processed_at`) keyed to a\n  person application.\n\n**Cohort definition.** \"Went into manual review around the same time as 32855 (opened\nearly June 2024)\" = joint (`account_type='joint'`) account applications whose\n`manual_review_mailers_sent_at` fell in **June 2024** (`[2024-06-01, 2024-07-01)`).\nEvery one of these 115 also carries `original_status='manual_review'`, confirming they\nall genuinely entered manual review (this is the entry signal; `manual_review_mailers_sent_at`\nis the entry timestamp).\n\n**Sweep detection.** For the cohort, the time from manual-review entry to final decision is\nstrongly bimodal: a merits cluster at 0\u201328 days, and a long-stuck cluster at 283\u2013312 days.\nGrouping the cohort's `final_decisioned_at` by day shows a single dominant spike \u2014\n**2025-04-09, 50 applications** \u2014 and that spike is exactly the long-stuck cluster. No other\nday comes close (next largest day is 19, a normal ~2\u20133 week review batch in June, not a\ncloseout). I therefore classify each cohort member into one bucket:\n- **aged_out** \u2014 `final_decisioned_at` on 2025-04-09 (the backlog closeout).\n- **resolved_before_sweep** \u2014 decided on its own merits before 2025-04-09.\n- **still_manual_review** \u2014 no `final_decisioned_at` (still open, status `manual_review`).\n\n**Applicant-level trace.** For the 50 aged-out applications I joined to\n`account_person_applications` \u2192 `person_applications` (100 applicants, 2 per app). An\napplicant's KYC is \"unresolved\" when `kyc_status='manual_review'` (never moved to a\nterminal `approved`/`denied`).\n\n**Robustness check.** The same 2025-04-09 spike hits the neighbouring entry months too\n(joint apps that entered manual review in May 2024: 50 swept; July 2024: 103 swept \u2014\n203 total on that day). So 2025-04-09 was a single platform-wide closeout event, not an\nartifact of the June window.\n\n## Cohort finding (joint apps entering manual review, June 2024)\n\n| Bucket | Count | Status detail |\n|---|---|---|\n| **aged_out** (swept 2025-04-09) | **50** | all `rejected` |\n| resolved_before_sweep (merits) | 64 | 42 `approved` + 22 `rejected` |\n| still_manual_review (open, no decision) | 1 | app 33001 (entered MR 2024-06-21) |\n| **cohort_size** | **115** | all `original_status='manual_review'` |\n\n- 50 + 64 + 1 = 115 \u2713\n- Time-to-decision: merits group resolved in 0\u201328 days (median ~1\u20133 days); swept group\n  stuck 283\u2013312 days, then all rejected on 2025-04-09.\n- The merits group was approved 66% of the time (42/64); the swept group was rejected\n  100% of the time (50/50) \u2014 the closeout was a \"reject the backlog\" action, not case-by-case adjudication.\n\n### Applicant level \u2014 for the 50 swept applications (100 applicants)\n- **unresolved_person_kyc = 68** \u2014 applicants whose `kyc_status` is still `manual_review`\n  (KYC never moved out of manual review).\n- 32 applicants did resolve to `approved`; 0 to `denied`; none null/pending/invalidated.\n- **both_applicants_unresolved = 18** \u2014 applications where *both* applicants were still stuck\n  in `manual_review` at closeout.\n- The remaining 32 swept applications had one applicant unresolved and one approved.\n\n(Consistency: 18 apps \u00d7 2 stuck + 32 apps \u00d7 1 stuck = 68 unresolved; 18 + 32 = 50 apps.)\n\n## 32855 walkthrough (the example)\n- Account application **32855**: `account_type='joint'`, `application_type='standard'`,\n  product `personal_checking`, `kyc_model='zeta_journey_v1'`.\n- **Opened** `created_at = 2024-06-04 03:39`; entered manual review the same minute\n  (`manual_review_mailers_sent_at = 2024-06-04 03:41`; `original_status='manual_review'`).\n- **Final decision** `final_decisioned_at = 2025-04-09 16:56`, terminal `status='rejected'`.\n- **Days in manual review = 309** (`date_diff('day', manual_review_mailers_sent_at, final_decisioned_at)`; same as days since open).\n- 32855 is one of the 50 swept apps and one of the 18 both-applicants-unresolved apps.\n\nLinked applicants (via `account_person_applications` \u2192 `person_applications`):\n\n| Person app | User | `initial_kyc_status` | `kyc_status` (now) | KYC vendor `outcome` / `outcome_reasons` | `processed_at` |\n|---|---|---|---|---|---|\n| 80596 | 106471 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review} | 2024-06-04 03:39 |\n| 80597 | 106472 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review, Denied KYC, Name Not Verified, SSN Not Verified} | 2024-06-04 03:39 |\n\nBoth `person_applications` rows still show `kyc_status='manual_review'` \u2014 neither person's\nKYC was ever adjudicated. The account was nonetheless rejected 10 months later on the\nsweep date. So the \"terminal status the member does not understand\" (`rejected`) was the\nbacklog closeout, not a merits determination on either applicant.\n\n## Recommendation\n1. **Treat 32855 as a backlog-closeout rejection, not a KYC denial.** Reopen/allow re-submission\n   without prejudice \u2014 neither applicant was ever adjudicated, and one (80596) had only a\n   single \"Fraud Review\" flag with no substantive denial reasons.\n2. **Bulk-remediate the other 17 \"both-unresolved\" swept applications** (18 total incl. 32855):\n   these were rejected on 2025-04-09 while both applicants' KYC sat in `manual_review`. At\n   minimum, notify these members that the rejection was administrative, not substantive, and\n   offer re-application. Consider the same for the 32 \"one-unresolved\" swept apps where one\n   applicant's KYC was never resolved.\n3. **Audit the closeout process.** A single-day rejection of 203 long-stuck joint\n   applications (May\u2013July 2024 entrants), 100% rejected and 68% with unresolved person KYC,\n   looks like a queue-age-out rather than review. Recommend a guardrail that prevents\n   `account_applications` from being decisioned to `rejected` while linked\n   `person_applications.kyc_status` remains `manual_review`, and add SLA/aging alerts before\n   applications hit ~300 days in manual review.\n4. **Track the one still-open case** (app 33001, in manual review since 2024-06-21) so it is\n   not silently re-swept in a future closeout.\n",
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.text",
+                "matched_values": [
+                  "# Joint Application 32855 \u2014 Backlog Closeout vs. Merits Review\n\n## Bottom line\nApplication **32855 was not decided on its merits.** It was swept up in a single\nbacklog closeout on **2025-04-09** that bulk-rejected long-stuck joint applications.\nIn the June-2024 cohort around 32855, **50 of 115** applications were disposed of on\nthat one day \u2014 every one of them rejected \u2014 after sitting in manual review for\n~9\u201310 months. Critically, the closeout closed the *account* applications while leaving\nmost of the underlying person KYC checks un-adjudicated: **68 of 100** applicants in the\nswept set were still in `manual_review` when their application was rejected, and\n**18 of the 50** swept applications had **both** applicants still stuck.\n\n## Method\nAll figures come from the `zeta3` warehouse (catalog `zeta3`, schema `rds`), not from\npolicy pages. Source tables:\n- `account_applications` \u2014 the account-level application (status, `original_status`,\n  `manual_review_mailers_sent_at`, `final_decisioned_at`, `account_type`).\n- `account_person_applications` \u2014 join table (`person_application_id` \u2194 `account_application_id`).\n- `person_applications` \u2014 per-applicant record carrying `kyc_status` / `initial_kyc_status` /\n  `kyced_at`.\n- `kyc_data` \u2014 the KYC vendor outcome (`outcome`, `outcome_reasons`, `processed_at`) keyed to a\n  person application.\n\n**Cohort definition.** \"Went into manual review around the same time as 32855 (opened\nearly June 2024)\" = joint (`account_type='joint'`) account applications whose\n`manual_review_mailers_sent_at` fell in **June 2024** (`[2024-06-01, 2024-07-01)`).\nEvery one of these 115 also carries `original_status='manual_review'`, confirming they\nall genuinely entered manual review (this is the entry signal; `manual_review_mailers_sent_at`\nis the entry timestamp).\n\n**Sweep detection.** For the cohort, the time from manual-review entry to final decision is\nstrongly bimodal: a merits cluster at 0\u201328 days, and a long-stuck cluster at 283\u2013312 days.\nGrouping the cohort's `final_decisioned_at` by day shows a single dominant spike \u2014\n**2025-04-09, 50 applications** \u2014 and that spike is exactly the long-stuck cluster. No other\nday comes close (next largest day is 19, a normal ~2\u20133 week review batch in June, not a\ncloseout). I therefore classify each cohort member into one bucket:\n- **aged_out** \u2014 `final_decisioned_at` on 2025-04-09 (the backlog closeout).\n- **resolved_before_sweep** \u2014 decided on its own merits before 2025-04-09.\n- **still_manual_review** \u2014 no `final_decisioned_at` (still open, status `manual_review`).\n\n**Applicant-level trace.** For the 50 aged-out applications I joined to\n`account_person_applications` \u2192 `person_applications` (100 applicants, 2 per app). An\napplicant's KYC is \"unresolved\" when `kyc_status='manual_review'` (never moved to a\nterminal `approved`/`denied`).\n\n**Robustness check.** The same 2025-04-09 spike hits the neighbouring entry months too\n(joint apps that entered manual review in May 2024: 50 swept; July 2024: 103 swept \u2014\n203 total on that day). So 2025-04-09 was a single platform-wide closeout event, not an\nartifact of the June window.\n\n## Cohort finding (joint apps entering manual review, June 2024)\n\n| Bucket | Count | Status detail |\n|---|---|---|\n| **aged_out** (swept 2025-04-09) | **50** | all `rejected` |\n| resolved_before_sweep (merits) | 64 | 42 `approved` + 22 `rejected` |\n| still_manual_review (open, no decision) | 1 | app 33001 (entered MR 2024-06-21) |\n| **cohort_size** | **115** | all `original_status='manual_review'` |\n\n- 50 + 64 + 1 = 115 \u2713\n- Time-to-decision: merits group resolved in 0\u201328 days (median ~1\u20133 days); swept group\n  stuck 283\u2013312 days, then all rejected on 2025-04-09.\n- The merits group was approved 66% of the time (42/64); the swept group was rejected\n  100% of the time (50/50) \u2014 the closeout was a \"reject the backlog\" action, not case-by-case adjudication.\n\n### Applicant level \u2014 for the 50 swept applications (100 applicants)\n- **unresolved_person_kyc = 68** \u2014 applicants whose `kyc_status` is still `manual_review`\n  (KYC never moved out of manual review).\n- 32 applicants did resolve to `approved`; 0 to `denied`; none null/pending/invalidated.\n- **both_applicants_unresolved = 18** \u2014 applications where *both* applicants were still stuck\n  in `manual_review` at closeout.\n- The remaining 32 swept applications had one applicant unresolved and one approved.\n\n(Consistency: 18 apps \u00d7 2 stuck + 32 apps \u00d7 1 stuck = 68 unresolved; 18 + 32 = 50 apps.)\n\n## 32855 walkthrough (the example)\n- Account application **32855**: `account_type='joint'`, `application_type='standard'`,\n  product `personal_checking`, `kyc_model='zeta_journey_v1'`.\n- **Opened** `created_at = 2024-06-04 03:39`; entered manual review the same minute\n  (`manual_review_mailers_sent_at = 2024-06-04 03:41`; `original_status='manual_review'`).\n- **Final decision** `final_decisioned_at = 2025-04-09 16:56`, terminal `status='rejected'`.\n- **Days in manual review = 309** (`date_diff('day', manual_review_mailers_sent_at, final_decisioned_at)`; same as days since open).\n- 32855 is one of the 50 swept apps and one of the 18 both-applicants-unresolved apps.\n\nLinked applicants (via `account_person_applications` \u2192 `person_applications`):\n\n| Person app | User | `initial_kyc_status` | `kyc_status` (now) | KYC vendor `outcome` / `outcome_reasons` | `processed_at` |\n|---|---|---|---|---|---|\n| 80596 | 106471 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review} | 2024-06-04 03:39 |\n| 80597 | 106472 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review, Denied KYC, Name Not Verified, SSN Not Verified} | 2024-06-04 03:39 |\n\nBoth `person_applications` rows still show `kyc_status='manual_review'` \u2014 neither person's\nKYC was ever adjudicated. The account was nonetheless rejected 10 months later on the\nsweep date. So the \"terminal status the member does not understand\" (`rejected`) was the\nbacklog closeout, not a merits determination on either applicant.\n\n## Recommendation\n1. **Treat 32855 as a backlog-closeout rejection, not a KYC denial.** Reopen/allow re-submission\n   without prejudice \u2014 neither applicant was ever adjudicated, and one (80596) had only a\n   single \"Fraud Review\" flag with no substantive denial reasons.\n2. **Bulk-remediate the other 17 \"both-unresolved\" swept applications** (18 total incl. 32855):\n   these were rejected on 2025-04-09 while both applicants' KYC sat in `manual_review`. At\n   minimum, notify these members that the rejection was administrative, not substantive, and\n   offer re-application. Consider the same for the 32 \"one-unresolved\" swept apps where one\n   applicant's KYC was never resolved.\n3. **Audit the closeout process.** A single-day rejection of 203 long-stuck joint\n   applications (May\u2013July 2024 entrants), 100% rejected and 68% with unresolved person KYC,\n   looks like a queue-age-out rather than review. Recommend a guardrail that prevents\n   `account_applications` from being decisioned to `rejected` while linked\n   `person_applications.kyc_status` remains `manual_review`, and add SLA/aging alerts before\n   applications hit ~300 days in manual review.\n4. **Track the one still-open case** (app 33001, in manual review since 2024-06-21) so it is\n   not silently re-swept in a future closeout.\n"
+                ],
+                "comparison": "contains"
+              }
+            }
+          },
+          {
+            "name": "report_states_sweep_date",
+            "definition": {
+              "metadata": {
+                "how_justification": "Extracts report.md text and asserts the backlog-closeout date appears.",
+                "why_justification": "The brief must name the date on which the aged-out applications were decided."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "md",
+                  "command": "extract_text",
+                  "arguments": {
+                    "path": "report.md"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": "2025-04-09",
+                "deterministic": {
+                  "path": "$.text",
+                  "comparison": "contains"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": "2025-04-09",
+              "actual": "# Joint Application 32855 \u2014 Backlog Closeout vs. Merits Review\n\n## Bottom line\nApplication **32855 was not decided on its merits.** It was swept up in a single\nbacklog closeout on **2025-04-09** that bulk-rejected long-stuck joint applications.\nIn the June-2024 cohort around 32855, **50 of 115** applications were disposed of on\nthat one day \u2014 every one of them rejected \u2014 after sitting in manual review for\n~9\u201310 months. Critically, the closeout closed the *account* applications while leaving\nmost of the underlying person KYC checks un-adjudicated: **68 of 100** applicants in the\nswept set were still in `manual_review` when their application was rejected, and\n**18 of the 50** swept applications had **both** applicants still stuck.\n\n## Method\nAll figures come from the `zeta3` warehouse (catalog `zeta3`, schema `rds`), not from\npolicy pages. Source tables:\n- `account_applications` \u2014 the account-level application (status, `original_status`,\n  `manual_review_mailers_sent_at`, `final_decisioned_at`, `account_type`).\n- `account_person_applications` \u2014 join table (`person_application_id` \u2194 `account_application_id`).\n- `person_applications` \u2014 per-applicant record carrying `kyc_status` / `initial_kyc_status` /\n  `kyced_at`.\n- `kyc_data` \u2014 the KYC vendor outcome (`outcome`, `outcome_reasons`, `processed_at`) keyed to a\n  person application.\n\n**Cohort definition.** \"Went into manual review around the same time as 32855 (opened\nearly June 2024)\" = joint (`account_type='joint'`) account applications whose\n`manual_review_mailers_sent_at` fell in **June 2024** (`[2024-06-01, 2024-07-01)`).\nEvery one of these 115 also carries `original_status='manual_review'`, confirming they\nall genuinely entered manual review (this is the entry signal; `manual_review_mailers_sent_at`\nis the entry timestamp).\n\n**Sweep detection.** For the cohort, the time from manual-review entry to final decision is\nstrongly bimodal: a merits cluster at 0\u201328 days, and a long-stuck cluster at 283\u2013312 days.\nGrouping the cohort's `final_decisioned_at` by day shows a single dominant spike \u2014\n**2025-04-09, 50 applications** \u2014 and that spike is exactly the long-stuck cluster. No other\nday comes close (next largest day is 19, a normal ~2\u20133 week review batch in June, not a\ncloseout). I therefore classify each cohort member into one bucket:\n- **aged_out** \u2014 `final_decisioned_at` on 2025-04-09 (the backlog closeout).\n- **resolved_before_sweep** \u2014 decided on its own merits before 2025-04-09.\n- **still_manual_review** \u2014 no `final_decisioned_at` (still open, status `manual_review`).\n\n**Applicant-level trace.** For the 50 aged-out applications I joined to\n`account_person_applications` \u2192 `person_applications` (100 applicants, 2 per app). An\napplicant's KYC is \"unresolved\" when `kyc_status='manual_review'` (never moved to a\nterminal `approved`/`denied`).\n\n**Robustness check.** The same 2025-04-09 spike hits the neighbouring entry months too\n(joint apps that entered manual review in May 2024: 50 swept; July 2024: 103 swept \u2014\n203 total on that day). So 2025-04-09 was a single platform-wide closeout event, not an\nartifact of the June window.\n\n## Cohort finding (joint apps entering manual review, June 2024)\n\n| Bucket | Count | Status detail |\n|---|---|---|\n| **aged_out** (swept 2025-04-09) | **50** | all `rejected` |\n| resolved_before_sweep (merits) | 64 | 42 `approved` + 22 `rejected` |\n| still_manual_review (open, no decision) | 1 | app 33001 (entered MR 2024-06-21) |\n| **cohort_size** | **115** | all `original_status='manual_review'` |\n\n- 50 + 64 + 1 = 115 \u2713\n- Time-to-decision: merits group resolved in 0\u201328 days (median ~1\u20133 days); swept group\n  stuck 283\u2013312 days, then all rejected on 2025-04-09.\n- The merits group was approved 66% of the time (42/64); the swept group was rejected\n  100% of the time (50/50) \u2014 the closeout was a \"reject the backlog\" action, not case-by-case adjudication.\n\n### Applicant level \u2014 for the 50 swept applications (100 applicants)\n- **unresolved_person_kyc = 68** \u2014 applicants whose `kyc_status` is still `manual_review`\n  (KYC never moved out of manual review).\n- 32 applicants did resolve to `approved`; 0 to `denied`; none null/pending/invalidated.\n- **both_applicants_unresolved = 18** \u2014 applications where *both* applicants were still stuck\n  in `manual_review` at closeout.\n- The remaining 32 swept applications had one applicant unresolved and one approved.\n\n(Consistency: 18 apps \u00d7 2 stuck + 32 apps \u00d7 1 stuck = 68 unresolved; 18 + 32 = 50 apps.)\n\n## 32855 walkthrough (the example)\n- Account application **32855**: `account_type='joint'`, `application_type='standard'`,\n  product `personal_checking`, `kyc_model='zeta_journey_v1'`.\n- **Opened** `created_at = 2024-06-04 03:39`; entered manual review the same minute\n  (`manual_review_mailers_sent_at = 2024-06-04 03:41`; `original_status='manual_review'`).\n- **Final decision** `final_decisioned_at = 2025-04-09 16:56`, terminal `status='rejected'`.\n- **Days in manual review = 309** (`date_diff('day', manual_review_mailers_sent_at, final_decisioned_at)`; same as days since open).\n- 32855 is one of the 50 swept apps and one of the 18 both-applicants-unresolved apps.\n\nLinked applicants (via `account_person_applications` \u2192 `person_applications`):\n\n| Person app | User | `initial_kyc_status` | `kyc_status` (now) | KYC vendor `outcome` / `outcome_reasons` | `processed_at` |\n|---|---|---|---|---|---|\n| 80596 | 106471 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review} | 2024-06-04 03:39 |\n| 80597 | 106472 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review, Denied KYC, Name Not Verified, SSN Not Verified} | 2024-06-04 03:39 |\n\nBoth `person_applications` rows still show `kyc_status='manual_review'` \u2014 neither person's\nKYC was ever adjudicated. The account was nonetheless rejected 10 months later on the\nsweep date. So the \"terminal status the member does not understand\" (`rejected`) was the\nbacklog closeout, not a merits determination on either applicant.\n\n## Recommendation\n1. **Treat 32855 as a backlog-closeout rejection, not a KYC denial.** Reopen/allow re-submission\n   without prejudice \u2014 neither applicant was ever adjudicated, and one (80596) had only a\n   single \"Fraud Review\" flag with no substantive denial reasons.\n2. **Bulk-remediate the other 17 \"both-unresolved\" swept applications** (18 total incl. 32855):\n   these were rejected on 2025-04-09 while both applicants' KYC sat in `manual_review`. At\n   minimum, notify these members that the rejection was administrative, not substantive, and\n   offer re-application. Consider the same for the 32 \"one-unresolved\" swept apps where one\n   applicant's KYC was never resolved.\n3. **Audit the closeout process.** A single-day rejection of 203 long-stuck joint\n   applications (May\u2013July 2024 entrants), 100% rejected and 68% with unresolved person KYC,\n   looks like a queue-age-out rather than review. Recommend a guardrail that prevents\n   `account_applications` from being decisioned to `rejected` while linked\n   `person_applications.kyc_status` remains `manual_review`, and add SLA/aging alerts before\n   applications hit ~300 days in manual review.\n4. **Track the one still-open case** (app 33001, in manual review since 2024-06-21) so it is\n   not silently re-swept in a future closeout.\n",
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.text",
+                "matched_values": [
+                  "# Joint Application 32855 \u2014 Backlog Closeout vs. Merits Review\n\n## Bottom line\nApplication **32855 was not decided on its merits.** It was swept up in a single\nbacklog closeout on **2025-04-09** that bulk-rejected long-stuck joint applications.\nIn the June-2024 cohort around 32855, **50 of 115** applications were disposed of on\nthat one day \u2014 every one of them rejected \u2014 after sitting in manual review for\n~9\u201310 months. Critically, the closeout closed the *account* applications while leaving\nmost of the underlying person KYC checks un-adjudicated: **68 of 100** applicants in the\nswept set were still in `manual_review` when their application was rejected, and\n**18 of the 50** swept applications had **both** applicants still stuck.\n\n## Method\nAll figures come from the `zeta3` warehouse (catalog `zeta3`, schema `rds`), not from\npolicy pages. Source tables:\n- `account_applications` \u2014 the account-level application (status, `original_status`,\n  `manual_review_mailers_sent_at`, `final_decisioned_at`, `account_type`).\n- `account_person_applications` \u2014 join table (`person_application_id` \u2194 `account_application_id`).\n- `person_applications` \u2014 per-applicant record carrying `kyc_status` / `initial_kyc_status` /\n  `kyced_at`.\n- `kyc_data` \u2014 the KYC vendor outcome (`outcome`, `outcome_reasons`, `processed_at`) keyed to a\n  person application.\n\n**Cohort definition.** \"Went into manual review around the same time as 32855 (opened\nearly June 2024)\" = joint (`account_type='joint'`) account applications whose\n`manual_review_mailers_sent_at` fell in **June 2024** (`[2024-06-01, 2024-07-01)`).\nEvery one of these 115 also carries `original_status='manual_review'`, confirming they\nall genuinely entered manual review (this is the entry signal; `manual_review_mailers_sent_at`\nis the entry timestamp).\n\n**Sweep detection.** For the cohort, the time from manual-review entry to final decision is\nstrongly bimodal: a merits cluster at 0\u201328 days, and a long-stuck cluster at 283\u2013312 days.\nGrouping the cohort's `final_decisioned_at` by day shows a single dominant spike \u2014\n**2025-04-09, 50 applications** \u2014 and that spike is exactly the long-stuck cluster. No other\nday comes close (next largest day is 19, a normal ~2\u20133 week review batch in June, not a\ncloseout). I therefore classify each cohort member into one bucket:\n- **aged_out** \u2014 `final_decisioned_at` on 2025-04-09 (the backlog closeout).\n- **resolved_before_sweep** \u2014 decided on its own merits before 2025-04-09.\n- **still_manual_review** \u2014 no `final_decisioned_at` (still open, status `manual_review`).\n\n**Applicant-level trace.** For the 50 aged-out applications I joined to\n`account_person_applications` \u2192 `person_applications` (100 applicants, 2 per app). An\napplicant's KYC is \"unresolved\" when `kyc_status='manual_review'` (never moved to a\nterminal `approved`/`denied`).\n\n**Robustness check.** The same 2025-04-09 spike hits the neighbouring entry months too\n(joint apps that entered manual review in May 2024: 50 swept; July 2024: 103 swept \u2014\n203 total on that day). So 2025-04-09 was a single platform-wide closeout event, not an\nartifact of the June window.\n\n## Cohort finding (joint apps entering manual review, June 2024)\n\n| Bucket | Count | Status detail |\n|---|---|---|\n| **aged_out** (swept 2025-04-09) | **50** | all `rejected` |\n| resolved_before_sweep (merits) | 64 | 42 `approved` + 22 `rejected` |\n| still_manual_review (open, no decision) | 1 | app 33001 (entered MR 2024-06-21) |\n| **cohort_size** | **115** | all `original_status='manual_review'` |\n\n- 50 + 64 + 1 = 115 \u2713\n- Time-to-decision: merits group resolved in 0\u201328 days (median ~1\u20133 days); swept group\n  stuck 283\u2013312 days, then all rejected on 2025-04-09.\n- The merits group was approved 66% of the time (42/64); the swept group was rejected\n  100% of the time (50/50) \u2014 the closeout was a \"reject the backlog\" action, not case-by-case adjudication.\n\n### Applicant level \u2014 for the 50 swept applications (100 applicants)\n- **unresolved_person_kyc = 68** \u2014 applicants whose `kyc_status` is still `manual_review`\n  (KYC never moved out of manual review).\n- 32 applicants did resolve to `approved`; 0 to `denied`; none null/pending/invalidated.\n- **both_applicants_unresolved = 18** \u2014 applications where *both* applicants were still stuck\n  in `manual_review` at closeout.\n- The remaining 32 swept applications had one applicant unresolved and one approved.\n\n(Consistency: 18 apps \u00d7 2 stuck + 32 apps \u00d7 1 stuck = 68 unresolved; 18 + 32 = 50 apps.)\n\n## 32855 walkthrough (the example)\n- Account application **32855**: `account_type='joint'`, `application_type='standard'`,\n  product `personal_checking`, `kyc_model='zeta_journey_v1'`.\n- **Opened** `created_at = 2024-06-04 03:39`; entered manual review the same minute\n  (`manual_review_mailers_sent_at = 2024-06-04 03:41`; `original_status='manual_review'`).\n- **Final decision** `final_decisioned_at = 2025-04-09 16:56`, terminal `status='rejected'`.\n- **Days in manual review = 309** (`date_diff('day', manual_review_mailers_sent_at, final_decisioned_at)`; same as days since open).\n- 32855 is one of the 50 swept apps and one of the 18 both-applicants-unresolved apps.\n\nLinked applicants (via `account_person_applications` \u2192 `person_applications`):\n\n| Person app | User | `initial_kyc_status` | `kyc_status` (now) | KYC vendor `outcome` / `outcome_reasons` | `processed_at` |\n|---|---|---|---|---|---|\n| 80596 | 106471 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review} | 2024-06-04 03:39 |\n| 80597 | 106472 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review, Denied KYC, Name Not Verified, SSN Not Verified} | 2024-06-04 03:39 |\n\nBoth `person_applications` rows still show `kyc_status='manual_review'` \u2014 neither person's\nKYC was ever adjudicated. The account was nonetheless rejected 10 months later on the\nsweep date. So the \"terminal status the member does not understand\" (`rejected`) was the\nbacklog closeout, not a merits determination on either applicant.\n\n## Recommendation\n1. **Treat 32855 as a backlog-closeout rejection, not a KYC denial.** Reopen/allow re-submission\n   without prejudice \u2014 neither applicant was ever adjudicated, and one (80596) had only a\n   single \"Fraud Review\" flag with no substantive denial reasons.\n2. **Bulk-remediate the other 17 \"both-unresolved\" swept applications** (18 total incl. 32855):\n   these were rejected on 2025-04-09 while both applicants' KYC sat in `manual_review`. At\n   minimum, notify these members that the rejection was administrative, not substantive, and\n   offer re-application. Consider the same for the 32 \"one-unresolved\" swept apps where one\n   applicant's KYC was never resolved.\n3. **Audit the closeout process.** A single-day rejection of 203 long-stuck joint\n   applications (May\u2013July 2024 entrants), 100% rejected and 68% with unresolved person KYC,\n   looks like a queue-age-out rather than review. Recommend a guardrail that prevents\n   `account_applications` from being decisioned to `rejected` while linked\n   `person_applications.kyc_status` remains `manual_review`, and add SLA/aging alerts before\n   applications hit ~300 days in manual review.\n4. **Track the one still-open case** (app 33001, in manual review since 2024-06-21) so it is\n   not silently re-swept in a future closeout.\n"
+                ],
+                "comparison": "contains"
+              }
+            }
+          }
+        ],
+        "gym_name": null,
+        "verifier_type": "file_check",
+        "category": "core",
+        "weight": 1.0,
+        "score": 0.0,
+        "name": "deliverable_files_graded",
+        "id": null
+      },
+      {
+        "passed": true,
+        "verdict": "PASS",
+        "rubric": "Examine the tool-call trace. PASS if the agent queried rds.account_applications for the pinned cohort (account_type joint, original_status manual_review, created in June 2024), determined the single bulk final-decision date empirically from the data (e.g. by grouping the cohort on the final decision date) rather than assuming it, AND joined rds.account_person_applications to rds.person_applications to inspect applicant-level kyc_status for the aged-out applications. FAIL if any of those three is missing, or if the figures were produced without querying the warehouse.",
+        "target": "trace",
+        "motivation": "The agent queried account_applications for the joint/June-2024/manual-review cohort (filtering on account_type='joint', manual_review_mailers_sent_at in June 2024, and verifying original_status='manual_review' for all 115), empirically determined the 2025-04-09 sweep date by grouping the cohort on final_decisioned_at, and joined account_person_applications to person_applications to inspect kyc_status for the 50 aged-out applications.",
+        "verifier_type": "rubric_check",
+        "category": "core",
+        "weight": 1.0,
+        "score": 1.0,
+        "name": "method_cohort_and_person_join",
+        "id": null
+      },
+      {
+        "passed": true,
+        "verdict": "PASS",
+        "rubric": "Does report.md state a clear conclusion -- that application 32855 was not decided on its merits but was closed out in a single bulk backlog sweep of aged-out manual-review applications, with the cohort figures given -- and, for 32855 specifically, name its two linked person applications, state that their KYC never left manual_review (neither approved nor denied), and give the number of days it spent in manual review? PASS if the conclusion and the 32855 walkthrough are both present; FAIL if either is missing or the conclusion contradicts the finding.",
+        "target": "workspace_files",
+        "motivation": "report.md clearly concludes 32855 was not decided on its merits but swept in a bulk closeout, gives the cohort figures (50 of 115), and for 32855 names linked person apps 80596 and 80597, states their KYC never left manual_review, and gives the days in manual review (309).",
+        "verifier_type": "rubric_check",
+        "category": "core",
+        "weight": 1.0,
+        "score": 1.0,
+        "name": "aged_out_conclusion_stated",
+        "id": null
+      }
+    ]
+  },
+  "verification_results": {
+    "deliverable_files_graded": {
+      "passed": false,
+      "reward": 0.8,
+      "threshold": 1.0,
+      "workspace_files": [
+        "metrics.json",
+        "report.md"
+      ],
+      "summary": {
+        "total_verifiers": 10,
+        "passed": 8,
+        "failed": 2,
+        "errored": 0,
+        "total_weight": 1.0,
+        "passed_weight": 0.8
+      },
+      "assertion_results": [
+        {
+          "name": "metrics_json_exists",
+          "definition": {
+            "metadata": {
+              "how_justification": "Checks metrics.json is present as a file in the workspace.",
+              "why_justification": "The machine-readable summary is a required deliverable."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "filesystem",
+                "command": "check_path_exists",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": true,
+              "deterministic": {
+                "path": "$.is_file",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": true,
+            "actual": true,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.is_file",
+              "matched_values": [
+                true
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "metrics_cohort_size",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts cohort_size equals 116.",
+              "why_justification": "Scoping the cohort is load-bearing: filtering on status instead of original_status, or ignoring account_type='joint', changes it."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 116,
+              "deterministic": {
+                "path": "$.cohort_size",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": false,
+            "expected": 116,
+            "actual": 115,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": "assertion failed",
+            "evaluation": {
+              "path": "$.cohort_size",
+              "matched_values": [
+                115
+              ],
+              "comparison": "equals",
+              "source_output_preview": "{\"sweep_date\": \"2025-04-09\", \"cohort_size\": 115, \"aged_out\": 50, \"resolved_before_sweep\": 64, \"still_manual_review\": 1, \"unresolved_person_kyc\": 68, \"both_applicants_unresolved\": 18, \"days_in_manual_review\": 309}"
+            }
+          }
+        },
+        {
+          "name": "metrics_aged_out",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts aged_out equals 50.",
+              "why_justification": "Identifying the single backlog-closeout date and counting only its applications is the core finding."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 50,
+              "deterministic": {
+                "path": "$.aged_out",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": 50,
+            "actual": 50,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.aged_out",
+              "matched_values": [
+                50
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "metrics_resolved_before_sweep",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts resolved_before_sweep equals 65.",
+              "why_justification": "The merits-decided remainder must exclude both the sweep and the never-decisioned application."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 65,
+              "deterministic": {
+                "path": "$.resolved_before_sweep",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": false,
+            "expected": 65,
+            "actual": 64,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": "assertion failed",
+            "evaluation": {
+              "path": "$.resolved_before_sweep",
+              "matched_values": [
+                64
+              ],
+              "comparison": "equals",
+              "source_output_preview": "{\"sweep_date\": \"2025-04-09\", \"cohort_size\": 115, \"aged_out\": 50, \"resolved_before_sweep\": 64, \"still_manual_review\": 1, \"unresolved_person_kyc\": 68, \"both_applicants_unresolved\": 18, \"days_in_manual_review\": 309}"
+            }
+          }
+        },
+        {
+          "name": "metrics_unresolved_person_kyc",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts unresolved_person_kyc equals 68.",
+              "why_justification": "Requires the person-level join; counting applications rather than applicant KYC records gets it wrong."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 68,
+              "deterministic": {
+                "path": "$.unresolved_person_kyc",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": 68,
+            "actual": 68,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.unresolved_person_kyc",
+              "matched_values": [
+                68
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "metrics_both_applicants_unresolved",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts both_applicants_unresolved equals 18.",
+              "why_justification": "Separating both-applicants-stuck from one-applicant-stuck requires a per-application having clause."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 18,
+              "deterministic": {
+                "path": "$.both_applicants_unresolved",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": 18,
+            "actual": 18,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.both_applicants_unresolved",
+              "matched_values": [
+                18
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "metrics_days_in_manual_review",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts days_in_manual_review equals 309.",
+              "why_justification": "The elapsed time for application 32855 proves the aging-out reading of its rejection."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 309,
+              "deterministic": {
+                "path": "$.days_in_manual_review",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": 309,
+            "actual": 309,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.days_in_manual_review",
+              "matched_values": [
+                309
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "report_md_exists",
+          "definition": {
+            "metadata": {
+              "how_justification": "Checks report.md is present as a file in the workspace.",
+              "why_justification": "The written brief is a required deliverable."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "filesystem",
+                "command": "check_path_exists",
+                "arguments": {
+                  "path": "report.md"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": true,
+              "deterministic": {
+                "path": "$.is_file",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": true,
+            "actual": true,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.is_file",
+              "matched_values": [
+                true
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "report_mentions_example_application",
+          "definition": {
+            "metadata": {
+              "how_justification": "Extracts report.md text and asserts it works the 32855 example.",
+              "why_justification": "The brief must ground the finding in the specific application that triggered the escalation."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "md",
+                "command": "extract_text",
+                "arguments": {
+                  "path": "report.md"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": "32855",
+              "deterministic": {
+                "path": "$.text",
+                "comparison": "contains"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": "32855",
+            "actual": "# Joint Application 32855 \u2014 Backlog Closeout vs. Merits Review\n\n## Bottom line\nApplication **32855 was not decided on its merits.** It was swept up in a single\nbacklog closeout on **2025-04-09** that bulk-rejected long-stuck joint applications.\nIn the June-2024 cohort around 32855, **50 of 115** applications were disposed of on\nthat one day \u2014 every one of them rejected \u2014 after sitting in manual review for\n~9\u201310 months. Critically, the closeout closed the *account* applications while leaving\nmost of the underlying person KYC checks un-adjudicated: **68 of 100** applicants in the\nswept set were still in `manual_review` when their application was rejected, and\n**18 of the 50** swept applications had **both** applicants still stuck.\n\n## Method\nAll figures come from the `zeta3` warehouse (catalog `zeta3`, schema `rds`), not from\npolicy pages. Source tables:\n- `account_applications` \u2014 the account-level application (status, `original_status`,\n  `manual_review_mailers_sent_at`, `final_decisioned_at`, `account_type`).\n- `account_person_applications` \u2014 join table (`person_application_id` \u2194 `account_application_id`).\n- `person_applications` \u2014 per-applicant record carrying `kyc_status` / `initial_kyc_status` /\n  `kyced_at`.\n- `kyc_data` \u2014 the KYC vendor outcome (`outcome`, `outcome_reasons`, `processed_at`) keyed to a\n  person application.\n\n**Cohort definition.** \"Went into manual review around the same time as 32855 (opened\nearly June 2024)\" = joint (`account_type='joint'`) account applications whose\n`manual_review_mailers_sent_at` fell in **June 2024** (`[2024-06-01, 2024-07-01)`).\nEvery one of these 115 also carries `original_status='manual_review'`, confirming they\nall genuinely entered manual review (this is the entry signal; `manual_review_mailers_sent_at`\nis the entry timestamp).\n\n**Sweep detection.** For the cohort, the time from manual-review entry to final decision is\nstrongly bimodal: a merits cluster at 0\u201328 days, and a long-stuck cluster at 283\u2013312 days.\nGrouping the cohort's `final_decisioned_at` by day shows a single dominant spike \u2014\n**2025-04-09, 50 applications** \u2014 and that spike is exactly the long-stuck cluster. No other\nday comes close (next largest day is 19, a normal ~2\u20133 week review batch in June, not a\ncloseout). I therefore classify each cohort member into one bucket:\n- **aged_out** \u2014 `final_decisioned_at` on 2025-04-09 (the backlog closeout).\n- **resolved_before_sweep** \u2014 decided on its own merits before 2025-04-09.\n- **still_manual_review** \u2014 no `final_decisioned_at` (still open, status `manual_review`).\n\n**Applicant-level trace.** For the 50 aged-out applications I joined to\n`account_person_applications` \u2192 `person_applications` (100 applicants, 2 per app). An\napplicant's KYC is \"unresolved\" when `kyc_status='manual_review'` (never moved to a\nterminal `approved`/`denied`).\n\n**Robustness check.** The same 2025-04-09 spike hits the neighbouring entry months too\n(joint apps that entered manual review in May 2024: 50 swept; July 2024: 103 swept \u2014\n203 total on that day). So 2025-04-09 was a single platform-wide closeout event, not an\nartifact of the June window.\n\n## Cohort finding (joint apps entering manual review, June 2024)\n\n| Bucket | Count | Status detail |\n|---|---|---|\n| **aged_out** (swept 2025-04-09) | **50** | all `rejected` |\n| resolved_before_sweep (merits) | 64 | 42 `approved` + 22 `rejected` |\n| still_manual_review (open, no decision) | 1 | app 33001 (entered MR 2024-06-21) |\n| **cohort_size** | **115** | all `original_status='manual_review'` |\n\n- 50 + 64 + 1 = 115 \u2713\n- Time-to-decision: merits group resolved in 0\u201328 days (median ~1\u20133 days); swept group\n  stuck 283\u2013312 days, then all rejected on 2025-04-09.\n- The merits group was approved 66% of the time (42/64); the swept group was rejected\n  100% of the time (50/50) \u2014 the closeout was a \"reject the backlog\" action, not case-by-case adjudication.\n\n### Applicant level \u2014 for the 50 swept applications (100 applicants)\n- **unresolved_person_kyc = 68** \u2014 applicants whose `kyc_status` is still `manual_review`\n  (KYC never moved out of manual review).\n- 32 applicants did resolve to `approved`; 0 to `denied`; none null/pending/invalidated.\n- **both_applicants_unresolved = 18** \u2014 applications where *both* applicants were still stuck\n  in `manual_review` at closeout.\n- The remaining 32 swept applications had one applicant unresolved and one approved.\n\n(Consistency: 18 apps \u00d7 2 stuck + 32 apps \u00d7 1 stuck = 68 unresolved; 18 + 32 = 50 apps.)\n\n## 32855 walkthrough (the example)\n- Account application **32855**: `account_type='joint'`, `application_type='standard'`,\n  product `personal_checking`, `kyc_model='zeta_journey_v1'`.\n- **Opened** `created_at = 2024-06-04 03:39`; entered manual review the same minute\n  (`manual_review_mailers_sent_at = 2024-06-04 03:41`; `original_status='manual_review'`).\n- **Final decision** `final_decisioned_at = 2025-04-09 16:56`, terminal `status='rejected'`.\n- **Days in manual review = 309** (`date_diff('day', manual_review_mailers_sent_at, final_decisioned_at)`; same as days since open).\n- 32855 is one of the 50 swept apps and one of the 18 both-applicants-unresolved apps.\n\nLinked applicants (via `account_person_applications` \u2192 `person_applications`):\n\n| Person app | User | `initial_kyc_status` | `kyc_status` (now) | KYC vendor `outcome` / `outcome_reasons` | `processed_at` |\n|---|---|---|---|---|---|\n| 80596 | 106471 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review} | 2024-06-04 03:39 |\n| 80597 | 106472 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review, Denied KYC, Name Not Verified, SSN Not Verified} | 2024-06-04 03:39 |\n\nBoth `person_applications` rows still show `kyc_status='manual_review'` \u2014 neither person's\nKYC was ever adjudicated. The account was nonetheless rejected 10 months later on the\nsweep date. So the \"terminal status the member does not understand\" (`rejected`) was the\nbacklog closeout, not a merits determination on either applicant.\n\n## Recommendation\n1. **Treat 32855 as a backlog-closeout rejection, not a KYC denial.** Reopen/allow re-submission\n   without prejudice \u2014 neither applicant was ever adjudicated, and one (80596) had only a\n   single \"Fraud Review\" flag with no substantive denial reasons.\n2. **Bulk-remediate the other 17 \"both-unresolved\" swept applications** (18 total incl. 32855):\n   these were rejected on 2025-04-09 while both applicants' KYC sat in `manual_review`. At\n   minimum, notify these members that the rejection was administrative, not substantive, and\n   offer re-application. Consider the same for the 32 \"one-unresolved\" swept apps where one\n   applicant's KYC was never resolved.\n3. **Audit the closeout process.** A single-day rejection of 203 long-stuck joint\n   applications (May\u2013July 2024 entrants), 100% rejected and 68% with unresolved person KYC,\n   looks like a queue-age-out rather than review. Recommend a guardrail that prevents\n   `account_applications` from being decisioned to `rejected` while linked\n   `person_applications.kyc_status` remains `manual_review`, and add SLA/aging alerts before\n   applications hit ~300 days in manual review.\n4. **Track the one still-open case** (app 33001, in manual review since 2024-06-21) so it is\n   not silently re-swept in a future closeout.\n",
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.text",
+              "matched_values": [
+                "# Joint Application 32855 \u2014 Backlog Closeout vs. Merits Review\n\n## Bottom line\nApplication **32855 was not decided on its merits.** It was swept up in a single\nbacklog closeout on **2025-04-09** that bulk-rejected long-stuck joint applications.\nIn the June-2024 cohort around 32855, **50 of 115** applications were disposed of on\nthat one day \u2014 every one of them rejected \u2014 after sitting in manual review for\n~9\u201310 months. Critically, the closeout closed the *account* applications while leaving\nmost of the underlying person KYC checks un-adjudicated: **68 of 100** applicants in the\nswept set were still in `manual_review` when their application was rejected, and\n**18 of the 50** swept applications had **both** applicants still stuck.\n\n## Method\nAll figures come from the `zeta3` warehouse (catalog `zeta3`, schema `rds`), not from\npolicy pages. Source tables:\n- `account_applications` \u2014 the account-level application (status, `original_status`,\n  `manual_review_mailers_sent_at`, `final_decisioned_at`, `account_type`).\n- `account_person_applications` \u2014 join table (`person_application_id` \u2194 `account_application_id`).\n- `person_applications` \u2014 per-applicant record carrying `kyc_status` / `initial_kyc_status` /\n  `kyced_at`.\n- `kyc_data` \u2014 the KYC vendor outcome (`outcome`, `outcome_reasons`, `processed_at`) keyed to a\n  person application.\n\n**Cohort definition.** \"Went into manual review around the same time as 32855 (opened\nearly June 2024)\" = joint (`account_type='joint'`) account applications whose\n`manual_review_mailers_sent_at` fell in **June 2024** (`[2024-06-01, 2024-07-01)`).\nEvery one of these 115 also carries `original_status='manual_review'`, confirming they\nall genuinely entered manual review (this is the entry signal; `manual_review_mailers_sent_at`\nis the entry timestamp).\n\n**Sweep detection.** For the cohort, the time from manual-review entry to final decision is\nstrongly bimodal: a merits cluster at 0\u201328 days, and a long-stuck cluster at 283\u2013312 days.\nGrouping the cohort's `final_decisioned_at` by day shows a single dominant spike \u2014\n**2025-04-09, 50 applications** \u2014 and that spike is exactly the long-stuck cluster. No other\nday comes close (next largest day is 19, a normal ~2\u20133 week review batch in June, not a\ncloseout). I therefore classify each cohort member into one bucket:\n- **aged_out** \u2014 `final_decisioned_at` on 2025-04-09 (the backlog closeout).\n- **resolved_before_sweep** \u2014 decided on its own merits before 2025-04-09.\n- **still_manual_review** \u2014 no `final_decisioned_at` (still open, status `manual_review`).\n\n**Applicant-level trace.** For the 50 aged-out applications I joined to\n`account_person_applications` \u2192 `person_applications` (100 applicants, 2 per app). An\napplicant's KYC is \"unresolved\" when `kyc_status='manual_review'` (never moved to a\nterminal `approved`/`denied`).\n\n**Robustness check.** The same 2025-04-09 spike hits the neighbouring entry months too\n(joint apps that entered manual review in May 2024: 50 swept; July 2024: 103 swept \u2014\n203 total on that day). So 2025-04-09 was a single platform-wide closeout event, not an\nartifact of the June window.\n\n## Cohort finding (joint apps entering manual review, June 2024)\n\n| Bucket | Count | Status detail |\n|---|---|---|\n| **aged_out** (swept 2025-04-09) | **50** | all `rejected` |\n| resolved_before_sweep (merits) | 64 | 42 `approved` + 22 `rejected` |\n| still_manual_review (open, no decision) | 1 | app 33001 (entered MR 2024-06-21) |\n| **cohort_size** | **115** | all `original_status='manual_review'` |\n\n- 50 + 64 + 1 = 115 \u2713\n- Time-to-decision: merits group resolved in 0\u201328 days (median ~1\u20133 days); swept group\n  stuck 283\u2013312 days, then all rejected on 2025-04-09.\n- The merits group was approved 66% of the time (42/64); the swept group was rejected\n  100% of the time (50/50) \u2014 the closeout was a \"reject the backlog\" action, not case-by-case adjudication.\n\n### Applicant level \u2014 for the 50 swept applications (100 applicants)\n- **unresolved_person_kyc = 68** \u2014 applicants whose `kyc_status` is still `manual_review`\n  (KYC never moved out of manual review).\n- 32 applicants did resolve to `approved`; 0 to `denied`; none null/pending/invalidated.\n- **both_applicants_unresolved = 18** \u2014 applications where *both* applicants were still stuck\n  in `manual_review` at closeout.\n- The remaining 32 swept applications had one applicant unresolved and one approved.\n\n(Consistency: 18 apps \u00d7 2 stuck + 32 apps \u00d7 1 stuck = 68 unresolved; 18 + 32 = 50 apps.)\n\n## 32855 walkthrough (the example)\n- Account application **32855**: `account_type='joint'`, `application_type='standard'`,\n  product `personal_checking`, `kyc_model='zeta_journey_v1'`.\n- **Opened** `created_at = 2024-06-04 03:39`; entered manual review the same minute\n  (`manual_review_mailers_sent_at = 2024-06-04 03:41`; `original_status='manual_review'`).\n- **Final decision** `final_decisioned_at = 2025-04-09 16:56`, terminal `status='rejected'`.\n- **Days in manual review = 309** (`date_diff('day', manual_review_mailers_sent_at, final_decisioned_at)`; same as days since open).\n- 32855 is one of the 50 swept apps and one of the 18 both-applicants-unresolved apps.\n\nLinked applicants (via `account_person_applications` \u2192 `person_applications`):\n\n| Person app | User | `initial_kyc_status` | `kyc_status` (now) | KYC vendor `outcome` / `outcome_reasons` | `processed_at` |\n|---|---|---|---|---|---|\n| 80596 | 106471 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review} | 2024-06-04 03:39 |\n| 80597 | 106472 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review, Denied KYC, Name Not Verified, SSN Not Verified} | 2024-06-04 03:39 |\n\nBoth `person_applications` rows still show `kyc_status='manual_review'` \u2014 neither person's\nKYC was ever adjudicated. The account was nonetheless rejected 10 months later on the\nsweep date. So the \"terminal status the member does not understand\" (`rejected`) was the\nbacklog closeout, not a merits determination on either applicant.\n\n## Recommendation\n1. **Treat 32855 as a backlog-closeout rejection, not a KYC denial.** Reopen/allow re-submission\n   without prejudice \u2014 neither applicant was ever adjudicated, and one (80596) had only a\n   single \"Fraud Review\" flag with no substantive denial reasons.\n2. **Bulk-remediate the other 17 \"both-unresolved\" swept applications** (18 total incl. 32855):\n   these were rejected on 2025-04-09 while both applicants' KYC sat in `manual_review`. At\n   minimum, notify these members that the rejection was administrative, not substantive, and\n   offer re-application. Consider the same for the 32 \"one-unresolved\" swept apps where one\n   applicant's KYC was never resolved.\n3. **Audit the closeout process.** A single-day rejection of 203 long-stuck joint\n   applications (May\u2013July 2024 entrants), 100% rejected and 68% with unresolved person KYC,\n   looks like a queue-age-out rather than review. Recommend a guardrail that prevents\n   `account_applications` from being decisioned to `rejected` while linked\n   `person_applications.kyc_status` remains `manual_review`, and add SLA/aging alerts before\n   applications hit ~300 days in manual review.\n4. **Track the one still-open case** (app 33001, in manual review since 2024-06-21) so it is\n   not silently re-swept in a future closeout.\n"
+              ],
+              "comparison": "contains"
+            }
+          }
+        },
+        {
+          "name": "report_states_sweep_date",
+          "definition": {
+            "metadata": {
+              "how_justification": "Extracts report.md text and asserts the backlog-closeout date appears.",
+              "why_justification": "The brief must name the date on which the aged-out applications were decided."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "md",
+                "command": "extract_text",
+                "arguments": {
+                  "path": "report.md"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": "2025-04-09",
+              "deterministic": {
+                "path": "$.text",
+                "comparison": "contains"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": "2025-04-09",
+            "actual": "# Joint Application 32855 \u2014 Backlog Closeout vs. Merits Review\n\n## Bottom line\nApplication **32855 was not decided on its merits.** It was swept up in a single\nbacklog closeout on **2025-04-09** that bulk-rejected long-stuck joint applications.\nIn the June-2024 cohort around 32855, **50 of 115** applications were disposed of on\nthat one day \u2014 every one of them rejected \u2014 after sitting in manual review for\n~9\u201310 months. Critically, the closeout closed the *account* applications while leaving\nmost of the underlying person KYC checks un-adjudicated: **68 of 100** applicants in the\nswept set were still in `manual_review` when their application was rejected, and\n**18 of the 50** swept applications had **both** applicants still stuck.\n\n## Method\nAll figures come from the `zeta3` warehouse (catalog `zeta3`, schema `rds`), not from\npolicy pages. Source tables:\n- `account_applications` \u2014 the account-level application (status, `original_status`,\n  `manual_review_mailers_sent_at`, `final_decisioned_at`, `account_type`).\n- `account_person_applications` \u2014 join table (`person_application_id` \u2194 `account_application_id`).\n- `person_applications` \u2014 per-applicant record carrying `kyc_status` / `initial_kyc_status` /\n  `kyced_at`.\n- `kyc_data` \u2014 the KYC vendor outcome (`outcome`, `outcome_reasons`, `processed_at`) keyed to a\n  person application.\n\n**Cohort definition.** \"Went into manual review around the same time as 32855 (opened\nearly June 2024)\" = joint (`account_type='joint'`) account applications whose\n`manual_review_mailers_sent_at` fell in **June 2024** (`[2024-06-01, 2024-07-01)`).\nEvery one of these 115 also carries `original_status='manual_review'`, confirming they\nall genuinely entered manual review (this is the entry signal; `manual_review_mailers_sent_at`\nis the entry timestamp).\n\n**Sweep detection.** For the cohort, the time from manual-review entry to final decision is\nstrongly bimodal: a merits cluster at 0\u201328 days, and a long-stuck cluster at 283\u2013312 days.\nGrouping the cohort's `final_decisioned_at` by day shows a single dominant spike \u2014\n**2025-04-09, 50 applications** \u2014 and that spike is exactly the long-stuck cluster. No other\nday comes close (next largest day is 19, a normal ~2\u20133 week review batch in June, not a\ncloseout). I therefore classify each cohort member into one bucket:\n- **aged_out** \u2014 `final_decisioned_at` on 2025-04-09 (the backlog closeout).\n- **resolved_before_sweep** \u2014 decided on its own merits before 2025-04-09.\n- **still_manual_review** \u2014 no `final_decisioned_at` (still open, status `manual_review`).\n\n**Applicant-level trace.** For the 50 aged-out applications I joined to\n`account_person_applications` \u2192 `person_applications` (100 applicants, 2 per app). An\napplicant's KYC is \"unresolved\" when `kyc_status='manual_review'` (never moved to a\nterminal `approved`/`denied`).\n\n**Robustness check.** The same 2025-04-09 spike hits the neighbouring entry months too\n(joint apps that entered manual review in May 2024: 50 swept; July 2024: 103 swept \u2014\n203 total on that day). So 2025-04-09 was a single platform-wide closeout event, not an\nartifact of the June window.\n\n## Cohort finding (joint apps entering manual review, June 2024)\n\n| Bucket | Count | Status detail |\n|---|---|---|\n| **aged_out** (swept 2025-04-09) | **50** | all `rejected` |\n| resolved_before_sweep (merits) | 64 | 42 `approved` + 22 `rejected` |\n| still_manual_review (open, no decision) | 1 | app 33001 (entered MR 2024-06-21) |\n| **cohort_size** | **115** | all `original_status='manual_review'` |\n\n- 50 + 64 + 1 = 115 \u2713\n- Time-to-decision: merits group resolved in 0\u201328 days (median ~1\u20133 days); swept group\n  stuck 283\u2013312 days, then all rejected on 2025-04-09.\n- The merits group was approved 66% of the time (42/64); the swept group was rejected\n  100% of the time (50/50) \u2014 the closeout was a \"reject the backlog\" action, not case-by-case adjudication.\n\n### Applicant level \u2014 for the 50 swept applications (100 applicants)\n- **unresolved_person_kyc = 68** \u2014 applicants whose `kyc_status` is still `manual_review`\n  (KYC never moved out of manual review).\n- 32 applicants did resolve to `approved`; 0 to `denied`; none null/pending/invalidated.\n- **both_applicants_unresolved = 18** \u2014 applications where *both* applicants were still stuck\n  in `manual_review` at closeout.\n- The remaining 32 swept applications had one applicant unresolved and one approved.\n\n(Consistency: 18 apps \u00d7 2 stuck + 32 apps \u00d7 1 stuck = 68 unresolved; 18 + 32 = 50 apps.)\n\n## 32855 walkthrough (the example)\n- Account application **32855**: `account_type='joint'`, `application_type='standard'`,\n  product `personal_checking`, `kyc_model='zeta_journey_v1'`.\n- **Opened** `created_at = 2024-06-04 03:39`; entered manual review the same minute\n  (`manual_review_mailers_sent_at = 2024-06-04 03:41`; `original_status='manual_review'`).\n- **Final decision** `final_decisioned_at = 2025-04-09 16:56`, terminal `status='rejected'`.\n- **Days in manual review = 309** (`date_diff('day', manual_review_mailers_sent_at, final_decisioned_at)`; same as days since open).\n- 32855 is one of the 50 swept apps and one of the 18 both-applicants-unresolved apps.\n\nLinked applicants (via `account_person_applications` \u2192 `person_applications`):\n\n| Person app | User | `initial_kyc_status` | `kyc_status` (now) | KYC vendor `outcome` / `outcome_reasons` | `processed_at` |\n|---|---|---|---|---|---|\n| 80596 | 106471 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review} | 2024-06-04 03:39 |\n| 80597 | 106472 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review, Denied KYC, Name Not Verified, SSN Not Verified} | 2024-06-04 03:39 |\n\nBoth `person_applications` rows still show `kyc_status='manual_review'` \u2014 neither person's\nKYC was ever adjudicated. The account was nonetheless rejected 10 months later on the\nsweep date. So the \"terminal status the member does not understand\" (`rejected`) was the\nbacklog closeout, not a merits determination on either applicant.\n\n## Recommendation\n1. **Treat 32855 as a backlog-closeout rejection, not a KYC denial.** Reopen/allow re-submission\n   without prejudice \u2014 neither applicant was ever adjudicated, and one (80596) had only a\n   single \"Fraud Review\" flag with no substantive denial reasons.\n2. **Bulk-remediate the other 17 \"both-unresolved\" swept applications** (18 total incl. 32855):\n   these were rejected on 2025-04-09 while both applicants' KYC sat in `manual_review`. At\n   minimum, notify these members that the rejection was administrative, not substantive, and\n   offer re-application. Consider the same for the 32 \"one-unresolved\" swept apps where one\n   applicant's KYC was never resolved.\n3. **Audit the closeout process.** A single-day rejection of 203 long-stuck joint\n   applications (May\u2013July 2024 entrants), 100% rejected and 68% with unresolved person KYC,\n   looks like a queue-age-out rather than review. Recommend a guardrail that prevents\n   `account_applications` from being decisioned to `rejected` while linked\n   `person_applications.kyc_status` remains `manual_review`, and add SLA/aging alerts before\n   applications hit ~300 days in manual review.\n4. **Track the one still-open case** (app 33001, in manual review since 2024-06-21) so it is\n   not silently re-swept in a future closeout.\n",
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.text",
+              "matched_values": [
+                "# Joint Application 32855 \u2014 Backlog Closeout vs. Merits Review\n\n## Bottom line\nApplication **32855 was not decided on its merits.** It was swept up in a single\nbacklog closeout on **2025-04-09** that bulk-rejected long-stuck joint applications.\nIn the June-2024 cohort around 32855, **50 of 115** applications were disposed of on\nthat one day \u2014 every one of them rejected \u2014 after sitting in manual review for\n~9\u201310 months. Critically, the closeout closed the *account* applications while leaving\nmost of the underlying person KYC checks un-adjudicated: **68 of 100** applicants in the\nswept set were still in `manual_review` when their application was rejected, and\n**18 of the 50** swept applications had **both** applicants still stuck.\n\n## Method\nAll figures come from the `zeta3` warehouse (catalog `zeta3`, schema `rds`), not from\npolicy pages. Source tables:\n- `account_applications` \u2014 the account-level application (status, `original_status`,\n  `manual_review_mailers_sent_at`, `final_decisioned_at`, `account_type`).\n- `account_person_applications` \u2014 join table (`person_application_id` \u2194 `account_application_id`).\n- `person_applications` \u2014 per-applicant record carrying `kyc_status` / `initial_kyc_status` /\n  `kyced_at`.\n- `kyc_data` \u2014 the KYC vendor outcome (`outcome`, `outcome_reasons`, `processed_at`) keyed to a\n  person application.\n\n**Cohort definition.** \"Went into manual review around the same time as 32855 (opened\nearly June 2024)\" = joint (`account_type='joint'`) account applications whose\n`manual_review_mailers_sent_at` fell in **June 2024** (`[2024-06-01, 2024-07-01)`).\nEvery one of these 115 also carries `original_status='manual_review'`, confirming they\nall genuinely entered manual review (this is the entry signal; `manual_review_mailers_sent_at`\nis the entry timestamp).\n\n**Sweep detection.** For the cohort, the time from manual-review entry to final decision is\nstrongly bimodal: a merits cluster at 0\u201328 days, and a long-stuck cluster at 283\u2013312 days.\nGrouping the cohort's `final_decisioned_at` by day shows a single dominant spike \u2014\n**2025-04-09, 50 applications** \u2014 and that spike is exactly the long-stuck cluster. No other\nday comes close (next largest day is 19, a normal ~2\u20133 week review batch in June, not a\ncloseout). I therefore classify each cohort member into one bucket:\n- **aged_out** \u2014 `final_decisioned_at` on 2025-04-09 (the backlog closeout).\n- **resolved_before_sweep** \u2014 decided on its own merits before 2025-04-09.\n- **still_manual_review** \u2014 no `final_decisioned_at` (still open, status `manual_review`).\n\n**Applicant-level trace.** For the 50 aged-out applications I joined to\n`account_person_applications` \u2192 `person_applications` (100 applicants, 2 per app). An\napplicant's KYC is \"unresolved\" when `kyc_status='manual_review'` (never moved to a\nterminal `approved`/`denied`).\n\n**Robustness check.** The same 2025-04-09 spike hits the neighbouring entry months too\n(joint apps that entered manual review in May 2024: 50 swept; July 2024: 103 swept \u2014\n203 total on that day). So 2025-04-09 was a single platform-wide closeout event, not an\nartifact of the June window.\n\n## Cohort finding (joint apps entering manual review, June 2024)\n\n| Bucket | Count | Status detail |\n|---|---|---|\n| **aged_out** (swept 2025-04-09) | **50** | all `rejected` |\n| resolved_before_sweep (merits) | 64 | 42 `approved` + 22 `rejected` |\n| still_manual_review (open, no decision) | 1 | app 33001 (entered MR 2024-06-21) |\n| **cohort_size** | **115** | all `original_status='manual_review'` |\n\n- 50 + 64 + 1 = 115 \u2713\n- Time-to-decision: merits group resolved in 0\u201328 days (median ~1\u20133 days); swept group\n  stuck 283\u2013312 days, then all rejected on 2025-04-09.\n- The merits group was approved 66% of the time (42/64); the swept group was rejected\n  100% of the time (50/50) \u2014 the closeout was a \"reject the backlog\" action, not case-by-case adjudication.\n\n### Applicant level \u2014 for the 50 swept applications (100 applicants)\n- **unresolved_person_kyc = 68** \u2014 applicants whose `kyc_status` is still `manual_review`\n  (KYC never moved out of manual review).\n- 32 applicants did resolve to `approved`; 0 to `denied`; none null/pending/invalidated.\n- **both_applicants_unresolved = 18** \u2014 applications where *both* applicants were still stuck\n  in `manual_review` at closeout.\n- The remaining 32 swept applications had one applicant unresolved and one approved.\n\n(Consistency: 18 apps \u00d7 2 stuck + 32 apps \u00d7 1 stuck = 68 unresolved; 18 + 32 = 50 apps.)\n\n## 32855 walkthrough (the example)\n- Account application **32855**: `account_type='joint'`, `application_type='standard'`,\n  product `personal_checking`, `kyc_model='zeta_journey_v1'`.\n- **Opened** `created_at = 2024-06-04 03:39`; entered manual review the same minute\n  (`manual_review_mailers_sent_at = 2024-06-04 03:41`; `original_status='manual_review'`).\n- **Final decision** `final_decisioned_at = 2025-04-09 16:56`, terminal `status='rejected'`.\n- **Days in manual review = 309** (`date_diff('day', manual_review_mailers_sent_at, final_decisioned_at)`; same as days since open).\n- 32855 is one of the 50 swept apps and one of the 18 both-applicants-unresolved apps.\n\nLinked applicants (via `account_person_applications` \u2192 `person_applications`):\n\n| Person app | User | `initial_kyc_status` | `kyc_status` (now) | KYC vendor `outcome` / `outcome_reasons` | `processed_at` |\n|---|---|---|---|---|---|\n| 80596 | 106471 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review} | 2024-06-04 03:39 |\n| 80597 | 106472 | manual_review | **manual_review** (unresolved) | \"Manual Review\" / {Fraud Review, Denied KYC, Name Not Verified, SSN Not Verified} | 2024-06-04 03:39 |\n\nBoth `person_applications` rows still show `kyc_status='manual_review'` \u2014 neither person's\nKYC was ever adjudicated. The account was nonetheless rejected 10 months later on the\nsweep date. So the \"terminal status the member does not understand\" (`rejected`) was the\nbacklog closeout, not a merits determination on either applicant.\n\n## Recommendation\n1. **Treat 32855 as a backlog-closeout rejection, not a KYC denial.** Reopen/allow re-submission\n   without prejudice \u2014 neither applicant was ever adjudicated, and one (80596) had only a\n   single \"Fraud Review\" flag with no substantive denial reasons.\n2. **Bulk-remediate the other 17 \"both-unresolved\" swept applications** (18 total incl. 32855):\n   these were rejected on 2025-04-09 while both applicants' KYC sat in `manual_review`. At\n   minimum, notify these members that the rejection was administrative, not substantive, and\n   offer re-application. Consider the same for the 32 \"one-unresolved\" swept apps where one\n   applicant's KYC was never resolved.\n3. **Audit the closeout process.** A single-day rejection of 203 long-stuck joint\n   applications (May\u2013July 2024 entrants), 100% rejected and 68% with unresolved person KYC,\n   looks like a queue-age-out rather than review. Recommend a guardrail that prevents\n   `account_applications` from being decisioned to `rejected` while linked\n   `person_applications.kyc_status` remains `manual_review`, and add SLA/aging alerts before\n   applications hit ~300 days in manual review.\n4. **Track the one still-open case** (app 33001, in manual review since 2024-06-21) so it is\n   not silently re-swept in a future closeout.\n"
+              ],
+              "comparison": "contains"
+            }
+          }
+        }
+      ],
+      "gym_name": null,
+      "verifier_type": "file_check",
+      "category": "core",
+      "weight": 1.0,
+      "score": 0.0,
+      "name": "deliverable_files_graded",
+      "id": null
+    },
+    "method_cohort_and_person_join": {
+      "passed": true,
+      "verdict": "PASS",
+      "rubric": "Examine the tool-call trace. PASS if the agent queried rds.account_applications for the pinned cohort (account_type joint, original_status manual_review, created in June 2024), determined the single bulk final-decision date empirically from the data (e.g. by grouping the cohort on the final decision date) rather than assuming it, AND joined rds.account_person_applications to rds.person_applications to inspect applicant-level kyc_status for the aged-out applications. FAIL if any of those three is missing, or if the figures were produced without querying the warehouse.",
+      "target": "trace",
+      "motivation": "The agent queried account_applications for the joint/June-2024/manual-review cohort (filtering on account_type='joint', manual_review_mailers_sent_at in June 2024, and verifying original_status='manual_review' for all 115), empirically determined the 2025-04-09 sweep date by grouping the cohort on final_decisioned_at, and joined account_person_applications to person_applications to inspect kyc_status for the 50 aged-out applications.",
+      "verifier_type": "rubric_check",
+      "category": "core",
+      "weight": 1.0,
+      "score": 1.0,
+      "name": "method_cohort_and_person_join",
+      "id": null
+    },
+    "aged_out_conclusion_stated": {
+      "passed": true,
+      "verdict": "PASS",
+      "rubric": "Does report.md state a clear conclusion -- that application 32855 was not decided on its merits but was closed out in a single bulk backlog sweep of aged-out manual-review applications, with the cohort figures given -- and, for 32855 specifically, name its two linked person applications, state that their KYC never left manual_review (neither approved nor denied), and give the number of days it spent in manual review? PASS if the conclusion and the 32855 walkthrough are both present; FAIL if either is missing or the conclusion contradicts the finding.",
+      "target": "workspace_files",
+      "motivation": "report.md clearly concludes 32855 was not decided on its merits but swept in a bulk closeout, gives the cohort figures (50 of 115), and for 32855 names linked person apps 80596 and 80597, states their KYC never left manual_review, and gives the days in manual review (309).",
+      "verifier_type": "rubric_check",
+      "category": "core",
+      "weight": 1.0,
+      "score": 1.0,
+      "name": "aged_out_conclusion_stated",
+      "id": null
+    }
+  },
+  "verification_summary": {
+    "total": 3,
+    "passed": 2,
+    "failed": 1,
+    "pass_rate": 0.6666666666666666,
+    "core_total": 3,
+    "core_passed": false,
+    "weighted_pass_rate": 0.6667,
+    "type_scores": {
+      "file_check": 0.0,
+      "rubric_check": 1.0
+    }
+  },
+  "failure_mode": "wrong_answer",
+  "statistics": {
+    "total_runs": 1,
+    "successful_runs": 0,
+    "overall_success_rate": 0.0,
+    "pass_at_1": 0.0,
+    "verifier_level_pass_rate": 0.6666666666666666,
+    "weighted_pass_rate": 0.6667,
+    "failure_modes": {
+      "wrong_answer": 1
+    },
+    "exhausted_runs": 0,
+    "total_verifiers_checked": 3,
+    "total_verifiers_passed": 2,
+    "individual_verifier_stats": {
+      "deliverable_files_graded": {
+        "passed": 0,
+        "total": 1,
+        "pass_rate": 0.0
+      },
+      "method_cohort_and_person_join": {
+        "passed": 1,
+        "total": 1,
+        "pass_rate": 1.0
+      },
+      "aged_out_conclusion_stated": {
+        "passed": 1,
+        "total": 1,
+        "pass_rate": 1.0
+      }
+    },
+    "mean_execution_time_ms": 0.0,
+    "tool_usage": {
+      "bash": 1,
+      "read": 1,
+      "task": 1,
+      "todowrite": 1,
+      "write": 1,
+      "zeta3-sql-gym_execute_sql_statement": 1,
+      "zeta3-sql-gym_list_tables": 1
+    },
+    "tool_available": [],
+    "tool_unused": []
+  },
+  "rubric_score": 0.6667,
+  "state_score": null,
+  "side_effect_gate": 1.0,
+  "judge_prompt_version": "v2.1-likert",
+  "rubric.uncategorised": 1.0
+}

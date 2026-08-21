@@ -1,0 +1,16 @@
+{
+    "job_name": "oracle-32855-v4",
+    "n_concurrent_trials": 1,
+    "verifier": {
+        "env": {
+            "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+            "OPENAI_BASE_URL": "http://34.41.10.8:4000/v1",
+            "JUDGE_MODEL": "openai/glm-5.2"
+        }
+    },
+    "tasks": [
+        {
+            "path": "."
+        }
+    ]
+}

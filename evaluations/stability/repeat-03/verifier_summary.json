@@ -1,0 +1,1576 @@
+{
+  "reward": {
+    "total": 1.0,
+    "pass": true,
+    "threshold": 1.0,
+    "composite": 1.0,
+    "mode": "benchmark",
+    "allowed_verifier_types": [
+      "agentic_llm_as_judge"
+    ],
+    "weights": {
+      "state": 0.5,
+      "sql": 0.25,
+      "rubric": 0.25
+    },
+    "state": {
+      "enabled": false,
+      "score": null,
+      "matched_expected": 0,
+      "soft_unauthorized": 0,
+      "hard_unauthorized": 0
+    },
+    "sql": {
+      "enabled": false,
+      "score": null,
+      "passed": 0,
+      "total": 0,
+      "verifiers": []
+    },
+    "rubric": {
+      "enabled": true,
+      "score": 1.0,
+      "prompt_version": "v2.1-likert",
+      "mode": "benchmark",
+      "core_passed": true,
+      "weighted_pass_rate": 1.0,
+      "failure_mode": "pass",
+      "items": [
+        {
+          "passed": true,
+          "reward": 1.0,
+          "threshold": 1.0,
+          "workspace_files": [
+            "metrics.json",
+            "report.md"
+          ],
+          "summary": {
+            "total_verifiers": 10,
+            "passed": 10,
+            "failed": 0,
+            "errored": 0,
+            "total_weight": 1.0,
+            "passed_weight": 1.0
+          },
+          "assertion_results": [
+            {
+              "name": "metrics_json_exists",
+              "definition": {
+                "metadata": {
+                  "how_justification": "Checks metrics.json is present as a file in the workspace.",
+                  "why_justification": "The machine-readable summary is a required deliverable."
+                },
+                "source": {
+                  "type": "file",
+                  "file": {
+                    "type": "filesystem",
+                    "command": "check_path_exists",
+                    "arguments": {
+                      "path": "metrics.json"
+                    }
+                  }
+                },
+                "assertion": {
+                  "type": "deterministic",
+                  "expected": true,
+                  "deterministic": {
+                    "path": "$.is_file",
+                    "comparison": "equals"
+                  }
+                }
+              },
+              "result": {
+                "success": true,
+                "expected": true,
+                "actual": true,
+                "effective_weight": 0.1,
+                "error": null,
+                "reason": null,
+                "evaluation": {
+                  "path": "$.is_file",
+                  "matched_values": [
+                    true
+                  ],
+                  "comparison": "equals"
+                }
+              }
+            },
+            {
+              "name": "metrics_cohort_size",
+              "definition": {
+                "metadata": {
+                  "how_justification": "Reads metrics.json and asserts cohort_size equals 116.",
+                  "why_justification": "Scoping the cohort is load-bearing: filtering on status instead of original_status, or ignoring account_type='joint', changes it."
+                },
+                "source": {
+                  "type": "file",
+                  "file": {
+                    "type": "json",
+                    "command": "read_file",
+                    "arguments": {
+                      "path": "metrics.json"
+                    }
+                  }
+                },
+                "assertion": {
+                  "type": "deterministic",
+                  "expected": 116,
+                  "deterministic": {
+                    "path": "$.cohort_size",
+                    "comparison": "equals"
+                  }
+                }
+              },
+              "result": {
+                "success": true,
+                "expected": 116,
+                "actual": 116,
+                "effective_weight": 0.1,
+                "error": null,
+                "reason": null,
+                "evaluation": {
+                  "path": "$.cohort_size",
+                  "matched_values": [
+                    116
+                  ],
+                  "comparison": "equals"
+                }
+              }
+            },
+            {
+              "name": "metrics_aged_out",
+              "definition": {
+                "metadata": {
+                  "how_justification": "Reads metrics.json and asserts aged_out equals 50.",
+                  "why_justification": "Identifying the single backlog-closeout date and counting only its applications is the core finding."
+                },
+                "source": {
+                  "type": "file",
+                  "file": {
+                    "type": "json",
+                    "command": "read_file",
+                    "arguments": {
+                      "path": "metrics.json"
+                    }
+                  }
+                },
+                "assertion": {
+                  "type": "deterministic",
+                  "expected": 50,
+                  "deterministic": {
+                    "path": "$.aged_out",
+                    "comparison": "equals"
+                  }
+                }
+              },
+              "result": {
+                "success": true,
+                "expected": 50,
+                "actual": 50,
+                "effective_weight": 0.1,
+                "error": null,
+                "reason": null,
+                "evaluation": {
+                  "path": "$.aged_out",
+                  "matched_values": [
+                    50
+                  ],
+                  "comparison": "equals"
+                }
+              }
+            },
+            {
+              "name": "metrics_resolved_before_sweep",
+              "definition": {
+                "metadata": {
+                  "how_justification": "Reads metrics.json and asserts resolved_before_sweep equals 65.",
+                  "why_justification": "The merits-decided remainder must exclude both the sweep and the never-decisioned application."
+                },
+                "source": {
+                  "type": "file",
+                  "file": {
+                    "type": "json",
+                    "command": "read_file",
+                    "arguments": {
+                      "path": "metrics.json"
+                    }
+                  }
+                },
+                "assertion": {
+                  "type": "deterministic",
+                  "expected": 65,
+                  "deterministic": {
+                    "path": "$.resolved_before_sweep",
+                    "comparison": "equals"
+                  }
+                }
+              },
+              "result": {
+                "success": true,
+                "expected": 65,
+                "actual": 65,
+                "effective_weight": 0.1,
+                "error": null,
+                "reason": null,
+                "evaluation": {
+                  "path": "$.resolved_before_sweep",
+                  "matched_values": [
+                    65
+                  ],
+                  "comparison": "equals"
+                }
+              }
+            },
+            {
+              "name": "metrics_unresolved_person_kyc",
+              "definition": {
+                "metadata": {
+                  "how_justification": "Reads metrics.json and asserts unresolved_person_kyc equals 68.",
+                  "why_justification": "Requires the person-level join; counting applications rather than applicant KYC records gets it wrong."
+                },
+                "source": {
+                  "type": "file",
+                  "file": {
+                    "type": "json",
+                    "command": "read_file",
+                    "arguments": {
+                      "path": "metrics.json"
+                    }
+                  }
+                },
+                "assertion": {
+                  "type": "deterministic",
+                  "expected": 68,
+                  "deterministic": {
+                    "path": "$.unresolved_person_kyc",
+                    "comparison": "equals"
+                  }
+                }
+              },
+              "result": {
+                "success": true,
+                "expected": 68,
+                "actual": 68,
+                "effective_weight": 0.1,
+                "error": null,
+                "reason": null,
+                "evaluation": {
+                  "path": "$.unresolved_person_kyc",
+                  "matched_values": [
+                    68
+                  ],
+                  "comparison": "equals"
+                }
+              }
+            },
+            {
+              "name": "metrics_both_applicants_unresolved",
+              "definition": {
+                "metadata": {
+                  "how_justification": "Reads metrics.json and asserts both_applicants_unresolved equals 18.",
+                  "why_justification": "Separating both-applicants-stuck from one-applicant-stuck requires a per-application having clause."
+                },
+                "source": {
+                  "type": "file",
+                  "file": {
+                    "type": "json",
+                    "command": "read_file",
+                    "arguments": {
+                      "path": "metrics.json"
+                    }
+                  }
+                },
+                "assertion": {
+                  "type": "deterministic",
+                  "expected": 18,
+                  "deterministic": {
+                    "path": "$.both_applicants_unresolved",
+                    "comparison": "equals"
+                  }
+                }
+              },
+              "result": {
+                "success": true,
+                "expected": 18,
+                "actual": 18,
+                "effective_weight": 0.1,
+                "error": null,
+                "reason": null,
+                "evaluation": {
+                  "path": "$.both_applicants_unresolved",
+                  "matched_values": [
+                    18
+                  ],
+                  "comparison": "equals"
+                }
+              }
+            },
+            {
+              "name": "metrics_days_in_manual_review",
+              "definition": {
+                "metadata": {
+                  "how_justification": "Reads metrics.json and asserts days_in_manual_review equals 309.",
+                  "why_justification": "The elapsed time for application 32855 proves the aging-out reading of its rejection."
+                },
+                "source": {
+                  "type": "file",
+                  "file": {
+                    "type": "json",
+                    "command": "read_file",
+                    "arguments": {
+                      "path": "metrics.json"
+                    }
+                  }
+                },
+                "assertion": {
+                  "type": "deterministic",
+                  "expected": 309,
+                  "deterministic": {
+                    "path": "$.days_in_manual_review",
+                    "comparison": "equals"
+                  }
+                }
+              },
+              "result": {
+                "success": true,
+                "expected": 309,
+                "actual": 309,
+                "effective_weight": 0.1,
+                "error": null,
+                "reason": null,
+                "evaluation": {
+                  "path": "$.days_in_manual_review",
+                  "matched_values": [
+                    309
+                  ],
+                  "comparison": "equals"
+                }
+              }
+            },
+            {
+              "name": "report_md_exists",
+              "definition": {
+                "metadata": {
+                  "how_justification": "Checks report.md is present as a file in the workspace.",
+                  "why_justification": "The written brief is a required deliverable."
+                },
+                "source": {
+                  "type": "file",
+                  "file": {
+                    "type": "filesystem",
+                    "command": "check_path_exists",
+                    "arguments": {
+                      "path": "report.md"
+                    }
+                  }
+                },
+                "assertion": {
+                  "type": "deterministic",
+                  "expected": true,
+                  "deterministic": {
+                    "path": "$.is_file",
+                    "comparison": "equals"
+                  }
+                }
+              },
+              "result": {
+                "success": true,
+                "expected": true,
+                "actual": true,
+                "effective_weight": 0.1,
+                "error": null,
+                "reason": null,
+                "evaluation": {
+                  "path": "$.is_file",
+                  "matched_values": [
+                    true
+                  ],
+                  "comparison": "equals"
+                }
+              }
+            },
+            {
+              "name": "report_mentions_example_application",
+              "definition": {
+                "metadata": {
+                  "how_justification": "Extracts report.md text and asserts it works the 32855 example.",
+                  "why_justification": "The brief must ground the finding in the specific application that triggered the escalation."
+                },
+                "source": {
+                  "type": "file",
+                  "file": {
+                    "type": "md",
+                    "command": "extract_text",
+                    "arguments": {
+                      "path": "report.md"
+                    }
+                  }
+                },
+                "assertion": {
+                  "type": "deterministic",
+                  "expected": "32855",
+                  "deterministic": {
+                    "path": "$.text",
+                    "comparison": "contains"
+                  }
+                }
+              },
+              "result": {
+                "success": true,
+                "expected": "32855",
+                "actual": "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n",
+                "effective_weight": 0.1,
+                "error": null,
+                "reason": null,
+                "evaluation": {
+                  "path": "$.text",
+                  "matched_values": [
+                    "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n"
+                  ],
+                  "comparison": "contains"
+                }
+              }
+            },
+            {
+              "name": "report_states_sweep_date",
+              "definition": {
+                "metadata": {
+                  "how_justification": "Extracts report.md text and asserts the backlog-closeout date appears.",
+                  "why_justification": "The brief must name the date on which the aged-out applications were decided."
+                },
+                "source": {
+                  "type": "file",
+                  "file": {
+                    "type": "md",
+                    "command": "extract_text",
+                    "arguments": {
+                      "path": "report.md"
+                    }
+                  }
+                },
+                "assertion": {
+                  "type": "deterministic",
+                  "expected": "2025-04-09",
+                  "deterministic": {
+                    "path": "$.text",
+                    "comparison": "contains"
+                  }
+                }
+              },
+              "result": {
+                "success": true,
+                "expected": "2025-04-09",
+                "actual": "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n",
+                "effective_weight": 0.1,
+                "error": null,
+                "reason": null,
+                "evaluation": {
+                  "path": "$.text",
+                  "matched_values": [
+                    "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n"
+                  ],
+                  "comparison": "contains"
+                }
+              }
+            }
+          ],
+          "gym_name": null,
+          "verifier_type": "file_check",
+          "category": "core",
+          "weight": 1.0,
+          "score": 1.0,
+          "name": "deliverable_files_graded",
+          "id": null
+        },
+        {
+          "passed": true,
+          "verdict": "PASS",
+          "rubric": "Examine the tool-call trace. PASS if the agent queried rds.account_applications for the pinned cohort (account_type joint, original_status manual_review, created in June 2024), determined the single bulk final-decision date empirically from the data (e.g. by grouping the cohort on the final decision date) rather than assuming it, AND joined rds.account_person_applications to rds.person_applications to inspect applicant-level kyc_status for the aged-out applications. FAIL if any of those three is missing, or if the figures were produced without querying the warehouse.",
+          "target": "trace",
+          "motivation": "The agent queried rds.account_applications for the joint/manual_review/June-2024 cohort, grouped the cohort by final_decisioned_at to empirically identify the 2025-04-09 bulk decision date, and joined rds.account_person_applications to rds.person_applications to inspect applicant-level kyc_status for the aged-out applications.",
+          "verifier_type": "rubric_check",
+          "category": "core",
+          "weight": 1.0,
+          "score": 1.0,
+          "name": "method_cohort_and_person_join",
+          "id": null
+        },
+        {
+          "passed": true,
+          "verdict": "PASS",
+          "rubric": "Does report.md state a clear conclusion -- that application 32855 was not decided on its merits but was closed out in a single bulk backlog sweep of aged-out manual-review applications, with the cohort figures given -- and, for 32855 specifically, name its two linked person applications, state that their KYC never left manual_review (neither approved nor denied), and give the number of days it spent in manual review? PASS if the conclusion and the 32855 walkthrough are both present; FAIL if either is missing or the conclusion contradicts the finding.",
+          "target": "workspace_files",
+          "motivation": "report.md concludes 32855 was not decided on its merits but aged out in the 2025-04-09 backlog sweep of 50 rejections out of a 116-application cohort, and the worked example names person applications 80596 and 80597, states both remained in manual_review with neither approved nor denied, and gives 309 days in review.",
+          "verifier_type": "rubric_check",
+          "category": "core",
+          "weight": 1.0,
+          "score": 1.0,
+          "name": "aged_out_conclusion_stated",
+          "id": null
+        }
+      ]
+    },
+    "verification_results": {
+      "deliverable_files_graded": {
+        "passed": true,
+        "reward": 1.0,
+        "threshold": 1.0,
+        "workspace_files": [
+          "metrics.json",
+          "report.md"
+        ],
+        "summary": {
+          "total_verifiers": 10,
+          "passed": 10,
+          "failed": 0,
+          "errored": 0,
+          "total_weight": 1.0,
+          "passed_weight": 1.0
+        },
+        "assertion_results": [
+          {
+            "name": "metrics_json_exists",
+            "definition": {
+              "metadata": {
+                "how_justification": "Checks metrics.json is present as a file in the workspace.",
+                "why_justification": "The machine-readable summary is a required deliverable."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "filesystem",
+                  "command": "check_path_exists",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": true,
+                "deterministic": {
+                  "path": "$.is_file",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": true,
+              "actual": true,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.is_file",
+                "matched_values": [
+                  true
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_cohort_size",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts cohort_size equals 116.",
+                "why_justification": "Scoping the cohort is load-bearing: filtering on status instead of original_status, or ignoring account_type='joint', changes it."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 116,
+                "deterministic": {
+                  "path": "$.cohort_size",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": 116,
+              "actual": 116,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.cohort_size",
+                "matched_values": [
+                  116
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_aged_out",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts aged_out equals 50.",
+                "why_justification": "Identifying the single backlog-closeout date and counting only its applications is the core finding."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 50,
+                "deterministic": {
+                  "path": "$.aged_out",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": 50,
+              "actual": 50,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.aged_out",
+                "matched_values": [
+                  50
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_resolved_before_sweep",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts resolved_before_sweep equals 65.",
+                "why_justification": "The merits-decided remainder must exclude both the sweep and the never-decisioned application."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 65,
+                "deterministic": {
+                  "path": "$.resolved_before_sweep",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": 65,
+              "actual": 65,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.resolved_before_sweep",
+                "matched_values": [
+                  65
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_unresolved_person_kyc",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts unresolved_person_kyc equals 68.",
+                "why_justification": "Requires the person-level join; counting applications rather than applicant KYC records gets it wrong."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 68,
+                "deterministic": {
+                  "path": "$.unresolved_person_kyc",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": 68,
+              "actual": 68,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.unresolved_person_kyc",
+                "matched_values": [
+                  68
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_both_applicants_unresolved",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts both_applicants_unresolved equals 18.",
+                "why_justification": "Separating both-applicants-stuck from one-applicant-stuck requires a per-application having clause."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 18,
+                "deterministic": {
+                  "path": "$.both_applicants_unresolved",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": 18,
+              "actual": 18,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.both_applicants_unresolved",
+                "matched_values": [
+                  18
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_days_in_manual_review",
+            "definition": {
+              "metadata": {
+                "how_justification": "Reads metrics.json and asserts days_in_manual_review equals 309.",
+                "why_justification": "The elapsed time for application 32855 proves the aging-out reading of its rejection."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "json",
+                  "command": "read_file",
+                  "arguments": {
+                    "path": "metrics.json"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": 309,
+                "deterministic": {
+                  "path": "$.days_in_manual_review",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": 309,
+              "actual": 309,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.days_in_manual_review",
+                "matched_values": [
+                  309
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "report_md_exists",
+            "definition": {
+              "metadata": {
+                "how_justification": "Checks report.md is present as a file in the workspace.",
+                "why_justification": "The written brief is a required deliverable."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "filesystem",
+                  "command": "check_path_exists",
+                  "arguments": {
+                    "path": "report.md"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": true,
+                "deterministic": {
+                  "path": "$.is_file",
+                  "comparison": "equals"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": true,
+              "actual": true,
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.is_file",
+                "matched_values": [
+                  true
+                ],
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "report_mentions_example_application",
+            "definition": {
+              "metadata": {
+                "how_justification": "Extracts report.md text and asserts it works the 32855 example.",
+                "why_justification": "The brief must ground the finding in the specific application that triggered the escalation."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "md",
+                  "command": "extract_text",
+                  "arguments": {
+                    "path": "report.md"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": "32855",
+                "deterministic": {
+                  "path": "$.text",
+                  "comparison": "contains"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": "32855",
+              "actual": "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n",
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.text",
+                "matched_values": [
+                  "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n"
+                ],
+                "comparison": "contains"
+              }
+            }
+          },
+          {
+            "name": "report_states_sweep_date",
+            "definition": {
+              "metadata": {
+                "how_justification": "Extracts report.md text and asserts the backlog-closeout date appears.",
+                "why_justification": "The brief must name the date on which the aged-out applications were decided."
+              },
+              "source": {
+                "type": "file",
+                "file": {
+                  "type": "md",
+                  "command": "extract_text",
+                  "arguments": {
+                    "path": "report.md"
+                  }
+                }
+              },
+              "assertion": {
+                "type": "deterministic",
+                "expected": "2025-04-09",
+                "deterministic": {
+                  "path": "$.text",
+                  "comparison": "contains"
+                }
+              }
+            },
+            "result": {
+              "success": true,
+              "expected": "2025-04-09",
+              "actual": "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n",
+              "effective_weight": 0.1,
+              "error": null,
+              "reason": null,
+              "evaluation": {
+                "path": "$.text",
+                "matched_values": [
+                  "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n"
+                ],
+                "comparison": "contains"
+              }
+            }
+          }
+        ],
+        "gym_name": null,
+        "verifier_type": "file_check",
+        "category": "core",
+        "weight": 1.0,
+        "score": 1.0,
+        "name": "deliverable_files_graded",
+        "id": null
+      },
+      "method_cohort_and_person_join": {
+        "passed": true,
+        "verdict": "PASS",
+        "rubric": "Examine the tool-call trace. PASS if the agent queried rds.account_applications for the pinned cohort (account_type joint, original_status manual_review, created in June 2024), determined the single bulk final-decision date empirically from the data (e.g. by grouping the cohort on the final decision date) rather than assuming it, AND joined rds.account_person_applications to rds.person_applications to inspect applicant-level kyc_status for the aged-out applications. FAIL if any of those three is missing, or if the figures were produced without querying the warehouse.",
+        "target": "trace",
+        "motivation": "The agent queried rds.account_applications for the joint/manual_review/June-2024 cohort, grouped the cohort by final_decisioned_at to empirically identify the 2025-04-09 bulk decision date, and joined rds.account_person_applications to rds.person_applications to inspect applicant-level kyc_status for the aged-out applications.",
+        "verifier_type": "rubric_check",
+        "category": "core",
+        "weight": 1.0,
+        "score": 1.0,
+        "name": "method_cohort_and_person_join",
+        "id": null
+      },
+      "aged_out_conclusion_stated": {
+        "passed": true,
+        "verdict": "PASS",
+        "rubric": "Does report.md state a clear conclusion -- that application 32855 was not decided on its merits but was closed out in a single bulk backlog sweep of aged-out manual-review applications, with the cohort figures given -- and, for 32855 specifically, name its two linked person applications, state that their KYC never left manual_review (neither approved nor denied), and give the number of days it spent in manual review? PASS if the conclusion and the 32855 walkthrough are both present; FAIL if either is missing or the conclusion contradicts the finding.",
+        "target": "workspace_files",
+        "motivation": "report.md concludes 32855 was not decided on its merits but aged out in the 2025-04-09 backlog sweep of 50 rejections out of a 116-application cohort, and the worked example names person applications 80596 and 80597, states both remained in manual_review with neither approved nor denied, and gives 309 days in review.",
+        "verifier_type": "rubric_check",
+        "category": "core",
+        "weight": 1.0,
+        "score": 1.0,
+        "name": "aged_out_conclusion_stated",
+        "id": null
+      }
+    },
+    "verification_summary": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "pass_rate": 1.0,
+      "core_total": 3,
+      "core_passed": true,
+      "weighted_pass_rate": 1.0,
+      "type_scores": {
+        "file_check": 1.0,
+        "rubric_check": 1.0
+      }
+    },
+    "failure_mode": "pass",
+    "statistics": {
+      "total_runs": 1,
+      "successful_runs": 1,
+      "overall_success_rate": 1.0,
+      "pass_at_1": 1.0,
+      "verifier_level_pass_rate": 1.0,
+      "weighted_pass_rate": 1.0,
+      "failure_modes": {
+        "pass": 1
+      },
+      "exhausted_runs": 0,
+      "total_verifiers_checked": 3,
+      "total_verifiers_passed": 3,
+      "individual_verifier_stats": {
+        "deliverable_files_graded": {
+          "passed": 1,
+          "total": 1,
+          "pass_rate": 1.0
+        },
+        "method_cohort_and_person_join": {
+          "passed": 1,
+          "total": 1,
+          "pass_rate": 1.0
+        },
+        "aged_out_conclusion_stated": {
+          "passed": 1,
+          "total": 1,
+          "pass_rate": 1.0
+        }
+      },
+      "mean_execution_time_ms": 0.0,
+      "tool_usage": {
+        "execute_sql_statement": 1,
+        "finish": 1,
+        "get_table": 1
+      },
+      "tool_available": [],
+      "tool_unused": []
+    },
+    "rubric_score": 1.0,
+    "state_score": null,
+    "side_effect_gate": 1.0,
+    "judge_prompt_version": "v2.1-likert",
+    "rubric.uncategorised": 1.0
+  },
+  "verification_results": {
+    "deliverable_files_graded": {
+      "passed": true,
+      "reward": 1.0,
+      "threshold": 1.0,
+      "workspace_files": [
+        "metrics.json",
+        "report.md"
+      ],
+      "summary": {
+        "total_verifiers": 10,
+        "passed": 10,
+        "failed": 0,
+        "errored": 0,
+        "total_weight": 1.0,
+        "passed_weight": 1.0
+      },
+      "assertion_results": [
+        {
+          "name": "metrics_json_exists",
+          "definition": {
+            "metadata": {
+              "how_justification": "Checks metrics.json is present as a file in the workspace.",
+              "why_justification": "The machine-readable summary is a required deliverable."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "filesystem",
+                "command": "check_path_exists",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": true,
+              "deterministic": {
+                "path": "$.is_file",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": true,
+            "actual": true,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.is_file",
+              "matched_values": [
+                true
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "metrics_cohort_size",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts cohort_size equals 116.",
+              "why_justification": "Scoping the cohort is load-bearing: filtering on status instead of original_status, or ignoring account_type='joint', changes it."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 116,
+              "deterministic": {
+                "path": "$.cohort_size",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": 116,
+            "actual": 116,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.cohort_size",
+              "matched_values": [
+                116
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "metrics_aged_out",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts aged_out equals 50.",
+              "why_justification": "Identifying the single backlog-closeout date and counting only its applications is the core finding."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 50,
+              "deterministic": {
+                "path": "$.aged_out",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": 50,
+            "actual": 50,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.aged_out",
+              "matched_values": [
+                50
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "metrics_resolved_before_sweep",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts resolved_before_sweep equals 65.",
+              "why_justification": "The merits-decided remainder must exclude both the sweep and the never-decisioned application."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 65,
+              "deterministic": {
+                "path": "$.resolved_before_sweep",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": 65,
+            "actual": 65,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.resolved_before_sweep",
+              "matched_values": [
+                65
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "metrics_unresolved_person_kyc",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts unresolved_person_kyc equals 68.",
+              "why_justification": "Requires the person-level join; counting applications rather than applicant KYC records gets it wrong."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 68,
+              "deterministic": {
+                "path": "$.unresolved_person_kyc",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": 68,
+            "actual": 68,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.unresolved_person_kyc",
+              "matched_values": [
+                68
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "metrics_both_applicants_unresolved",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts both_applicants_unresolved equals 18.",
+              "why_justification": "Separating both-applicants-stuck from one-applicant-stuck requires a per-application having clause."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 18,
+              "deterministic": {
+                "path": "$.both_applicants_unresolved",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": 18,
+            "actual": 18,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.both_applicants_unresolved",
+              "matched_values": [
+                18
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "metrics_days_in_manual_review",
+          "definition": {
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts days_in_manual_review equals 309.",
+              "why_justification": "The elapsed time for application 32855 proves the aging-out reading of its rejection."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 309,
+              "deterministic": {
+                "path": "$.days_in_manual_review",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": 309,
+            "actual": 309,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.days_in_manual_review",
+              "matched_values": [
+                309
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "report_md_exists",
+          "definition": {
+            "metadata": {
+              "how_justification": "Checks report.md is present as a file in the workspace.",
+              "why_justification": "The written brief is a required deliverable."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "filesystem",
+                "command": "check_path_exists",
+                "arguments": {
+                  "path": "report.md"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": true,
+              "deterministic": {
+                "path": "$.is_file",
+                "comparison": "equals"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": true,
+            "actual": true,
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.is_file",
+              "matched_values": [
+                true
+              ],
+              "comparison": "equals"
+            }
+          }
+        },
+        {
+          "name": "report_mentions_example_application",
+          "definition": {
+            "metadata": {
+              "how_justification": "Extracts report.md text and asserts it works the 32855 example.",
+              "why_justification": "The brief must ground the finding in the specific application that triggered the escalation."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "md",
+                "command": "extract_text",
+                "arguments": {
+                  "path": "report.md"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": "32855",
+              "deterministic": {
+                "path": "$.text",
+                "comparison": "contains"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": "32855",
+            "actual": "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n",
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.text",
+              "matched_values": [
+                "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n"
+              ],
+              "comparison": "contains"
+            }
+          }
+        },
+        {
+          "name": "report_states_sweep_date",
+          "definition": {
+            "metadata": {
+              "how_justification": "Extracts report.md text and asserts the backlog-closeout date appears.",
+              "why_justification": "The brief must name the date on which the aged-out applications were decided."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "md",
+                "command": "extract_text",
+                "arguments": {
+                  "path": "report.md"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": "2025-04-09",
+              "deterministic": {
+                "path": "$.text",
+                "comparison": "contains"
+              }
+            }
+          },
+          "result": {
+            "success": true,
+            "expected": "2025-04-09",
+            "actual": "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n",
+            "effective_weight": 0.1,
+            "error": null,
+            "reason": null,
+            "evaluation": {
+              "path": "$.text",
+              "matched_values": [
+                "# Aged-Out KYC Manual Review: joint applications created 2024-06-01 to 2024-06-30\n\n## Question\nJoint account application 32855 sat in KYC manual review for months and then\nturned up `rejected`. Was it decided on its merits, or closed out with a\nbacklog? How large is that backlog, and how much of it is unresolved\napplicant-level KYC?\n\n## Method\n1. Pinned the cohort: `rds.account_applications` with `account_type='joint'`\n   and `original_status='manual_review'`, `created_at` in June 2024 --\n   116 applications.\n2. Grouped the cohort by `cast(final_decisioned_at as date)`. One date is a\n   clear outlier: **2025-04-09**, with 50 rejections recorded that day. Every\n   other decision date in the cohort carries at most 16 applications and falls\n   within weeks of application creation. 2025-04-09 is the backlog closeout.\n3. Split the cohort three ways: aged out on the sweep date, decided on any\n   other date (resolved on their merits), and never decisioned (still open).\n4. Went person-level on the 50 aged-out applications by joining\n   `rds.account_person_applications` to `rds.person_applications`, counting\n   applicant records still at `kyc_status='manual_review'` and the applications\n   where both applicants were unresolved.\n\n## Findings\n- Cohort size: 116 joint manual-review applications created in June 2024.\n- Aged out in the 2025-04-09 sweep: 50 (all `rejected`).\n- Resolved before the sweep on their own decision date: 65 (43 approved,\n  22 rejected).\n- Still sitting in `manual_review` with no final decision: 1.\n- The 50 aged-out applications carry 100 applicant records; 68 of them never\n  left `manual_review`. None were ever `denied` -- these applications were not\n  refused, they were abandoned.\n- 18 of the 50 aged-out applications had BOTH applicants unresolved. The other\n  32 had one applicant cleared and one stuck, so a single stalled applicant was\n  enough to sink the whole joint application.\n\n## Worked example (the escalation)\nApplication 32855: `personal_checking`, `account_type='joint'`,\n`original_status='manual_review'`, created 2024-06-04 03:39:00.983193.\nManual-review mailers went out 2024-06-04 03:41:20.778327 and reminders were\nscheduled for 2024-06-07. Its two linked person applications are 80596\n(user 106471, KYC'd 2024-06-04 03:39:04) and 80597 (user 106472, KYC'd\n2024-06-04 03:39:07); both are still `kyc_status='manual_review'`,\n`kyc_journey_status='waiting_review'`, `awaiting_documentation=true`. Neither\napplicant was ever approved or denied. The application then received\n`final_decisioned_at = 2025-04-09 16:56:11.279649` with `status='rejected'`\n-- **309 days** after it was created, on the sweep date, alongside 49 others.\nSo 32855 was not decided on its merits: it aged out, and it is one of the 18\napplications where both applicants were still unresolved.\n\n## Recommendation\nTreat the 2025-04-09 rejections as an aging-out action, not an adverse KYC\ndecision, and say so to the member: both applicants must submit a fresh\napplication, because nothing in the record denies them. Operationally, 68\napplicant KYC records sat in `manual_review` for roughly ten months with\ndocumentation outstanding and only a single reminder date on file. Add an\nage-based alert on manual-review applications well before the ten-month mark,\nand escalate the 32-application \"one applicant stuck\" pattern first, since\nthose are the cheapest to rescue.\n"
+              ],
+              "comparison": "contains"
+            }
+          }
+        }
+      ],
+      "gym_name": null,
+      "verifier_type": "file_check",
+      "category": "core",
+      "weight": 1.0,
+      "score": 1.0,
+      "name": "deliverable_files_graded",
+      "id": null
+    },
+    "method_cohort_and_person_join": {
+      "passed": true,
+      "verdict": "PASS",
+      "rubric": "Examine the tool-call trace. PASS if the agent queried rds.account_applications for the pinned cohort (account_type joint, original_status manual_review, created in June 2024), determined the single bulk final-decision date empirically from the data (e.g. by grouping the cohort on the final decision date) rather than assuming it, AND joined rds.account_person_applications to rds.person_applications to inspect applicant-level kyc_status for the aged-out applications. FAIL if any of those three is missing, or if the figures were produced without querying the warehouse.",
+      "target": "trace",
+      "motivation": "The agent queried rds.account_applications for the joint/manual_review/June-2024 cohort, grouped the cohort by final_decisioned_at to empirically identify the 2025-04-09 bulk decision date, and joined rds.account_person_applications to rds.person_applications to inspect applicant-level kyc_status for the aged-out applications.",
+      "verifier_type": "rubric_check",
+      "category": "core",
+      "weight": 1.0,
+      "score": 1.0,
+      "name": "method_cohort_and_person_join",
+      "id": null
+    },
+    "aged_out_conclusion_stated": {
+      "passed": true,
+      "verdict": "PASS",
+      "rubric": "Does report.md state a clear conclusion -- that application 32855 was not decided on its merits but was closed out in a single bulk backlog sweep of aged-out manual-review applications, with the cohort figures given -- and, for 32855 specifically, name its two linked person applications, state that their KYC never left manual_review (neither approved nor denied), and give the number of days it spent in manual review? PASS if the conclusion and the 32855 walkthrough are both present; FAIL if either is missing or the conclusion contradicts the finding.",
+      "target": "workspace_files",
+      "motivation": "report.md concludes 32855 was not decided on its merits but aged out in the 2025-04-09 backlog sweep of 50 rejections out of a 116-application cohort, and the worked example names person applications 80596 and 80597, states both remained in manual_review with neither approved nor denied, and gives 309 days in review.",
+      "verifier_type": "rubric_check",
+      "category": "core",
+      "weight": 1.0,
+      "score": 1.0,
+      "name": "aged_out_conclusion_stated",
+      "id": null
+    }
+  },
+  "verification_summary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "pass_rate": 1.0,
+    "core_total": 3,
+    "core_passed": true,
+    "weighted_pass_rate": 1.0,
+    "type_scores": {
+      "file_check": 1.0,
+      "rubric_check": 1.0
+    }
+  },
+  "statistics": {
+    "total_runs": 1,
+    "successful_runs": 1,
+    "overall_success_rate": 1.0,
+    "pass_at_1": 1.0,
+    "verifier_level_pass_rate": 1.0,
+    "weighted_pass_rate": 1.0,
+    "failure_modes": {
+      "pass": 1
+    },
+    "exhausted_runs": 0,
+    "total_verifiers_checked": 3,
+    "total_verifiers_passed": 3,
+    "individual_verifier_stats": {
+      "deliverable_files_graded": {
+        "passed": 1,
+        "total": 1,
+        "pass_rate": 1.0
+      },
+      "method_cohort_and_person_join": {
+        "passed": 1,
+        "total": 1,
+        "pass_rate": 1.0
+      },
+      "aged_out_conclusion_stated": {
+        "passed": 1,
+        "total": 1,
+        "pass_rate": 1.0
+      }
+    },
+    "mean_execution_time_ms": 0.0,
+    "tool_usage": {
+      "execute_sql_statement": 1,
+      "finish": 1,
+      "get_table": 1
+    },
+    "tool_available": [],
+    "tool_unused": []
+  },
+  "allowed_verifier_types": [
+    "agentic_llm_as_judge"
+  ],
+  "error": null
+}

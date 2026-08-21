@@ -1,0 +1,46 @@
+{
+    "task": {
+        "path": "."
+    },
+    "trial_name": "resolve-aged-out-kyc-manual-revi__TastXS6",
+    "trials_dir": "\\tmp\\harbor-jobs\\glm-5x-opencode-32855-rerun2",
+    "agent": {
+        "name": "opencode",
+        "model_name": "glm/glm-5.2",
+        "kwargs": {
+            "opencode_config": {
+                "provider": {
+                    "glm": {
+                        "npm": "@ai-sdk/openai-compatible",
+                        "name": "GLM Gateway",
+                        "options": {
+                            "baseURL": "http://34.41.10.8:4000/v1",
+                            "apiKey": "{env:OPENAI_API_KEY}"
+                        },
+                        "models": {
+                            "glm-5.2": {
+                                "name": "GLM-5.2",
+                                "reasoning": true,
+                                "interleaved": {
+                                    "field": "reasoning_content"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "env": {
+            "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+            "OPENAI_BASE_URL": "http://34.41.10.8:4000/v1"
+        }
+    },
+    "verifier": {
+        "env": {
+            "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+            "OPENAI_BASE_URL": "http://34.41.10.8:4000/v1",
+            "JUDGE_MODEL": "openai/glm-5.2"
+        }
+    },
+    "job_id": "10c09519-7a44-42cf-9ab5-161f789d0237"
+}

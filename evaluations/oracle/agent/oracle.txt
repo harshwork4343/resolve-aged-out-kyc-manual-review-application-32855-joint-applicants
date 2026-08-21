@@ -1,0 +1,13 @@
+[1/11] zeta3-sql-gym.get_table
+[2/11] zeta3-sql-gym.get_table
+[3/11] zeta3-sql-gym.get_table
+[4/11] zeta3-sql-gym.execute_sql_statement
+[5/11] zeta3-sql-gym.execute_sql_statement
+[6/11] zeta3-sql-gym.execute_sql_statement
+[7/11] zeta3-sql-gym.execute_sql_statement
+[8/11] zeta3-sql-gym.execute_sql_statement
+[9/11] zeta3-sql-gym.execute_sql_statement
+[10/11] zeta3-sql-gym.execute_sql_statement
+[11/11] zeta3-sql-gym.execute_sql_statement
+wrote captured responses to /tmp/tmp.lxmopQ782Y/solution/golden_trajectory.json
+mirrored to /logs/verifier/golden_trajectory.json (for daytona artifact pull)
