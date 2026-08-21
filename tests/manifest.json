@@ -1,0 +1,361 @@
+{
+  "state": {
+    "snapshot": {
+      "mode": "full_hash",
+      "exclude_tables": [
+        "sqlite_sequence",
+        "sqlite_stat1"
+      ],
+      "include_tables": null,
+      "schema_version": "harbor.state_snapshot.v1",
+      "debug_full_rows": "gzip",
+      "diff_schema_version": "harbor.state_diff.v1"
+    },
+    "canonicalize": {
+      "sort_lists": true,
+      "strip_fields": [
+        "id",
+        "created_at",
+        "updated_at",
+        "executed_at",
+        "deleted_at",
+        "execution_time_ms",
+        "fr_due_by",
+        "due_by",
+        "last_used_at",
+        "create_time",
+        "update_time"
+      ],
+      "strip_fields_per_table": {}
+    },
+    "expected_diff_file": "solution/expected_diff.json"
+  },
+  "rubric": {
+    "file": "tests/rubric.toml",
+    "evidence": {
+      "max_chars": 350000,
+      "include_db_diff": true,
+      "include_trajectory": true,
+      "include_final_output": true
+    }
+  },
+  "scoring": {
+    "weights": {
+      "sql": 0.25,
+      "state": 0.5,
+      "rubric": 0.25,
+      "trajectory": 0.0
+    },
+    "round_digits": 4,
+    "side_effect_gate": true,
+    "flat_verifier_scoring": true,
+    "allowed_verifier_types": [
+      "agentic_llm_as_judge"
+    ]
+  },
+  "trajectory": {
+    "golden_file": "solution/golden_trajectory.json",
+    "response_match": {
+      "match_is_error": true,
+      "match_status_code": true,
+      "strip_response_fields": [
+        "id",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    "forbidden_tools": [],
+    "agent_trace_file": "/logs/agent/trajectory.json",
+    "scoring_per_step": {
+      "args_weight": 0.4,
+      "name_weight": 0.4,
+      "response_weight": 0.2
+    }
+  },
+  "sql_verifiers": [],
+  "verifier_configs": [
+    {
+      "name": "deliverable_files_graded",
+      "description": "Open the files the agent wrote to /workspace and assert the audit's load-bearing figures and the required report content. Deterministic, no LLM.",
+      "category": "core",
+      "weight": 1.0,
+      "pass_threshold": 1.0,
+      "verifier_type": "file_check",
+      "verifier_spec": {
+        "task_id": "aged-out-kyc-manual-review-audit",
+        "verifiers": [
+          {
+            "name": "metrics_json_exists",
+            "metadata": {
+              "how_justification": "Checks metrics.json is present as a file in the workspace.",
+              "why_justification": "The machine-readable summary is a required deliverable."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "filesystem",
+                "command": "check_path_exists",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": true,
+              "deterministic": {
+                "path": "$.is_file",
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_cohort_size",
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts cohort_size equals 116.",
+              "why_justification": "Scoping the cohort is load-bearing: filtering on status instead of original_status, or ignoring account_type='joint', changes it."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 116,
+              "deterministic": {
+                "path": "$.cohort_size",
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_aged_out",
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts aged_out equals 50.",
+              "why_justification": "Identifying the single backlog-closeout date and counting only its applications is the core finding."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 50,
+              "deterministic": {
+                "path": "$.aged_out",
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_resolved_before_sweep",
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts resolved_before_sweep equals 65.",
+              "why_justification": "The merits-decided remainder must exclude both the sweep and the never-decisioned application."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 65,
+              "deterministic": {
+                "path": "$.resolved_before_sweep",
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_unresolved_person_kyc",
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts unresolved_person_kyc equals 68.",
+              "why_justification": "Requires the person-level join; counting applications rather than applicant KYC records gets it wrong."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 68,
+              "deterministic": {
+                "path": "$.unresolved_person_kyc",
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_both_applicants_unresolved",
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts both_applicants_unresolved equals 18.",
+              "why_justification": "Separating both-applicants-stuck from one-applicant-stuck requires a per-application having clause."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 18,
+              "deterministic": {
+                "path": "$.both_applicants_unresolved",
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "metrics_days_in_manual_review",
+            "metadata": {
+              "how_justification": "Reads metrics.json and asserts days_in_manual_review equals 309.",
+              "why_justification": "The elapsed time for application 32855 proves the aging-out reading of its rejection."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "json",
+                "command": "read_file",
+                "arguments": {
+                  "path": "metrics.json"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": 309,
+              "deterministic": {
+                "path": "$.days_in_manual_review",
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "report_md_exists",
+            "metadata": {
+              "how_justification": "Checks report.md is present as a file in the workspace.",
+              "why_justification": "The written brief is a required deliverable."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "filesystem",
+                "command": "check_path_exists",
+                "arguments": {
+                  "path": "report.md"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": true,
+              "deterministic": {
+                "path": "$.is_file",
+                "comparison": "equals"
+              }
+            }
+          },
+          {
+            "name": "report_mentions_example_application",
+            "metadata": {
+              "how_justification": "Extracts report.md text and asserts it works the 32855 example.",
+              "why_justification": "The brief must ground the finding in the specific application that triggered the escalation."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "md",
+                "command": "extract_text",
+                "arguments": {
+                  "path": "report.md"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": "32855",
+              "deterministic": {
+                "path": "$.text",
+                "comparison": "contains"
+              }
+            }
+          },
+          {
+            "name": "report_states_sweep_date",
+            "metadata": {
+              "how_justification": "Extracts report.md text and asserts the backlog-closeout date appears.",
+              "why_justification": "The brief must name the date on which the aged-out applications were decided."
+            },
+            "source": {
+              "type": "file",
+              "file": {
+                "type": "md",
+                "command": "extract_text",
+                "arguments": {
+                  "path": "report.md"
+                }
+              }
+            },
+            "assertion": {
+              "type": "deterministic",
+              "expected": "2025-04-09",
+              "deterministic": {
+                "path": "$.text",
+                "comparison": "contains"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "method_cohort_and_person_join",
+      "description": "Trace shows the real method: pinned the cohort, found the closeout date from the decision-date distribution, and joined to applicant KYC.",
+      "category": "core",
+      "target": "trace",
+      "rubric": "Examine the tool-call trace. PASS if the agent queried rds.account_applications for the pinned cohort (account_type joint, original_status manual_review, created in June 2024), determined the single bulk final-decision date empirically from the data (e.g. by grouping the cohort on the final decision date) rather than assuming it, AND joined rds.account_person_applications to rds.person_applications to inspect applicant-level kyc_status for the aged-out applications. FAIL if any of those three is missing, or if the figures were produced without querying the warehouse.",
+      "verifier_type": "rubric_check"
+    },
+    {
+      "name": "aged_out_conclusion_stated",
+      "description": "Final answer states the aging-out conclusion with the 32855 walkthrough.",
+      "category": "core",
+      "target": "workspace_files",
+      "rubric": "Does report.md state a clear conclusion -- that application 32855 was not decided on its merits but was closed out in a single bulk backlog sweep of aged-out manual-review applications, with the cohort figures given -- and, for 32855 specifically, name its two linked person applications, state that their KYC never left manual_review (neither approved nor denied), and give the number of days it spent in manual review? PASS if the conclusion and the 32855 walkthrough are both present; FAIL if either is missing or the conclusion contradicts the finding.",
+      "verifier_type": "rubric_check",
+      "files": [
+        "metrics.json",
+        "report.md"
+      ]
+    }
+  ]
+}

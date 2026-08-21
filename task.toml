@@ -1,0 +1,260 @@
+schema_version = "1.1"
+
+[task]
+name = "harbor/resolve-aged-out-kyc-manual-review-application-32855-joint-applicants"
+description = "resolve aged out kyc manual review application 32855 joint applicants"
+keywords = [ "harbor",]
+
+[[task.authors]]
+name = "OBI RL Gym"
+email = "obi-rl-gym@turing.com"
+
+[metadata]
+scenario_name = "Aged-out KYC manual-review audit: joint applications created 2024-06-01..2024-06-30"
+scenario_description = """
+Compliance Ops is asked why joint account application 32855 -- both applicants
+stuck in KYC manual review -- ended up 'rejected'. The real question is whether
+it was decided on its merits or closed out in a bulk aging-out sweep. Fully
+data-internal: the cohort, the sweep date, and the applicant-level KYC state are
+all derived from the warehouse, so nothing depends on the Confluence KYC policy
+page. Deliverables are FILES ONLY: /workspace/metrics.json +
+/workspace/report.md. No gym write.
+
+=== GOLD ===
+Provenance: decision_replay_candidates.json#dr-8ec3632ae05bd91f
+(family kyc_manual_review, branch kyc_mr_unresolved_aged_out, seed row 32855).
+Cohort (pinned): rds.account_applications WHERE original_status='manual_review'
+AND account_type='joint' AND created_at >= TIMESTAMP '2024-06-01' AND created_at
+< TIMESTAMP '2024-07-01'.
+Rule (data-internal): group the cohort on cast(final_decisioned_at as date). One
+date is a gross outlier -- 2025-04-09 with 50 rejections; every other decision
+date carries <= 16 and lands within weeks of creation. Those 50 are the aged-out
+applications. Applications decided on any other date were resolved on their
+merits; a final_decisioned_at of NULL means still open.
+Person level: join rds.account_person_applications -> rds.person_applications;
+"unresolved" = kyc_status='manual_review'.
+
+Gold values (re-verified on the served warehouse via zeta3-sql-gym):
+  sweep_date                 = "2025-04-09"
+  cohort_size                = 116
+  aged_out                   = 50   (all status='rejected')
+  resolved_before_sweep      = 65   (43 approved + 22 rejected)
+  still_manual_review        = 1
+  unresolved_person_kyc      = 68   (of 100 applicant records on the 50; 0 denied)
+  both_applicants_unresolved = 18
+  days_in_manual_review      = 309  (application 32855)
+Example: application 32855 (personal_checking, joint) created
+2024-06-04T03:39:00.983193, manual_review_mailers_sent_at
+2024-06-04T03:41:20.778327, send_manual_review_reminders_on 2024-06-07,
+final_decisioned_at 2025-04-09T16:56:11.279649, status 'rejected'. Its two
+person applications 80596 (user 106471) and 80597 (user 106472) are both
+kyc_status='manual_review', kyc_journey_status='waiting_review',
+awaiting_documentation=true, never approved and never denied.
+
+Gold SQL (rollup): with c as (select * from "rds.account_applications" where
+original_status='manual_review' and account_type='joint' and created_at >=
+TIMESTAMP '2024-06-01' and created_at < TIMESTAMP '2024-07-01'), sw as (select *
+from c where status='rejected' and cast(final_decisioned_at as date) = DATE
+'2025-04-09'), pl as (select sw.id as aid, pa.kyc_status from sw join
+"rds.account_person_applications" apa on apa.account_application_id = sw.id join
+"rds.person_applications" pa on pa.id = apa.person_application_id) select
+(select count(*) from c) as cohort_size, (select count(*) from sw) as aged_out,
+(select count(*) from c where status in ('approved','rejected') and
+cast(final_decisioned_at as date) <> DATE '2025-04-09') as
+resolved_before_sweep, (select count(*) from c where status='manual_review') as
+still_manual_review, (select count(*) from pl where kyc_status='manual_review')
+as unresolved_person_kyc, (select count(*) from (select aid from pl where
+kyc_status='manual_review' group by aid having count(*) = 2) x) as
+both_applicants_unresolved, (select datediff('day', cast(created_at as date),
+cast(final_decisioned_at as date)) from "rds.account_applications" where id =
+32855) as days_in_manual_review
+See solution/golden_trajectory.json for the full step chain.
+"""
+source_task_id = "dr-8ec3632ae05bd91f"
+state_snapshot_enabled = false
+# metadata.agent left unset: setting it to "oracle" lets test_outputs.py score
+# a crashed agent against golden_trajectory.json.
+
+# No docker-compose.yaml -> no DinD. All gyms run in the SAME container as the
+# agent/proxy; image/host_port below are lineage only, not services to build.
+
+[[metadata.mcp_servers_extended]]
+name = "slack-gym"
+image = "us-central1-docker.pkg.dev/delivery-g-obi/data-obi-rl-gym/benchmark-base@sha256:ccc08929160ba6a33ba86c070a240f0865c75f83a20b981e6e571998b8b41c83"
+host_port = 8008
+container_port = 8008
+remote_url_env = "SLACK_GYM_MCP_REMOTE_URL"
+auth_header_name = "x-slack-user-token"
+# Decides WHICH slack user the agent acts as. Carried over from the reference
+# bundle — confirm it is the identity your scenario wants before shipping.
+access_token = "slack-106500000001-106500000002-106500000003-6532e3ccbb28f3919202a928f100baac"
+db_id_header_name = "x-database-id"
+reset_on_run = true
+
+[[metadata.mcp_servers_extended]]
+name = "jira-gym"
+image = "us-central1-docker.pkg.dev/delivery-g-obi/data-obi-rl-gym/benchmark-base@sha256:ccc08929160ba6a33ba86c070a240f0865c75f83a20b981e6e571998b8b41c83"
+host_port = 8005
+container_port = 8005
+remote_url_env = "JIRA_GYM_MCP_REMOTE_URL"
+auth_header_name = "x-jira-user-token"
+access_token = ""
+db_id_header_name = "x-database-id"
+reset_on_run = true
+
+[[metadata.mcp_servers_extended]]
+name = "zeta3-sql-gym"
+image = "us-central1-docker.pkg.dev/delivery-g-obi/data-obi-rl-gym/benchmark-base@sha256:ccc08929160ba6a33ba86c070a240f0865c75f83a20b981e6e571998b8b41c83"
+host_port = 8004
+container_port = 8004
+remote_url_env = "ZETA3_SQL_GYM_MCP_REMOTE_URL"
+auth_header_name = ""
+access_token = ""
+db_id_header_name = "x-database-id"
+reset_on_run = false
+
+# Distractor connectors — no verifier touches these. figma (8012) is excluded:
+# it would take the catalog to 150 tools, past OpenAI's 128 cap. These 7 = 123.
+
+[[metadata.mcp_servers_extended]]
+name = "confluence-gym"
+image = "us-central1-docker.pkg.dev/delivery-g-obi/data-obi-rl-gym/benchmark-base@sha256:ccc08929160ba6a33ba86c070a240f0865c75f83a20b981e6e571998b8b41c83"
+host_port = 8006
+container_port = 8006
+remote_url_env = "CONFLUENCE_GYM_MCP_REMOTE_URL"
+auth_header_name = "x-confluence-user-token"
+access_token = ""
+db_id_header_name = "x-database-id"
+reset_on_run = true
+
+[[metadata.mcp_servers_extended]]
+name = "google-drive-gym"
+image = "us-central1-docker.pkg.dev/delivery-g-obi/data-obi-rl-gym/benchmark-base@sha256:ccc08929160ba6a33ba86c070a240f0865c75f83a20b981e6e571998b8b41c83"
+host_port = 8007
+container_port = 8007
+remote_url_env = "GOOGLE_DRIVE_GYM_MCP_REMOTE_URL"
+auth_header_name = "x-gdrive-user-token"
+access_token = ""
+db_id_header_name = "x-database-id"
+reset_on_run = true
+
+[[metadata.mcp_servers_extended]]
+name = "freshdesk-gym"
+image = "us-central1-docker.pkg.dev/delivery-g-obi/data-obi-rl-gym/benchmark-base@sha256:ccc08929160ba6a33ba86c070a240f0865c75f83a20b981e6e571998b8b41c83"
+host_port = 8010
+container_port = 8010
+remote_url_env = "FRESHDESK_GYM_MCP_REMOTE_URL"
+auth_header_name = "x-freshdesk-user-token"
+access_token = ""
+db_id_header_name = "x-database-id"
+reset_on_run = true
+
+[[metadata.mcp_servers_extended]]
+name = "email-gym"
+image = "us-central1-docker.pkg.dev/delivery-g-obi/data-obi-rl-gym/benchmark-base@sha256:ccc08929160ba6a33ba86c070a240f0865c75f83a20b981e6e571998b8b41c83"
+host_port = 8011
+container_port = 8011
+remote_url_env = "EMAIL_GYM_MCP_REMOTE_URL"
+auth_header_name = "x-email-user-token"
+access_token = ""
+db_id_header_name = "x-database-id"
+reset_on_run = true
+
+[verifier]
+timeout_sec = 300.0
+
+[agent]
+timeout_sec = 4800.0
+# Non-root agent user; /app is root-only so the agent can't read
+# task.toml/solution/tests off disk.
+user = "rlgymagent"
+
+[environment]
+build_timeout_sec = 1200.0
+cpus = 2
+memory_mb = 4096
+# Merged image is ~50GB. Unverified against the real sandbox's provisioning.
+storage_mb = 65536
+gpus = 0
+allow_internet = true
+
+[[environment.mcp_servers]]
+name = "slack-gym"
+transport = "streamable-http"
+url = "http://localhost:7000/mcp/slack-gym"
+args = []
+
+[[environment.mcp_servers]]
+name = "jira-gym"
+transport = "streamable-http"
+url = "http://localhost:7000/mcp/jira-gym"
+args = []
+
+[[environment.mcp_servers]]
+name = "zeta3-sql-gym"
+transport = "streamable-http"
+url = "http://localhost:7000/mcp/zeta3-sql-gym"
+args = []
+
+[[environment.mcp_servers]]
+name = "confluence-gym"
+transport = "streamable-http"
+url = "http://localhost:7000/mcp/confluence-gym"
+args = []
+
+[[environment.mcp_servers]]
+name = "google-drive-gym"
+transport = "streamable-http"
+url = "http://localhost:7000/mcp/google-drive-gym"
+args = []
+
+[[environment.mcp_servers]]
+name = "freshdesk-gym"
+transport = "streamable-http"
+url = "http://localhost:7000/mcp/freshdesk-gym"
+args = []
+
+[[environment.mcp_servers]]
+name = "email-gym"
+transport = "streamable-http"
+url = "http://localhost:7000/mcp/email-gym"
+args = []
+
+[metadata.verifier_judge]
+model = "openai/glm-5.2"
+api_key_env = "OPENAI_API_KEY"
+temperature = 0.0
+max_tokens = 16384
+fallback_model = "anthropic/claude-opus-4-6"
+fallback_api_key_env = "ANTHROPIC_API_KEY"
+
+[verifier.env]
+OPENAI_API_KEY = "${OPENAI_API_KEY:-}"
+
+[environment.healthcheck]
+command = "curl -fsS http://localhost:7000/health"
+interval_sec = 15.0
+timeout_sec = 5.0
+retries = 40
+start_period_sec = 30.0
+start_interval_sec = 15.0
+
+[environment.env]
+HARBOR_MCP_MODE = "${HARBOR_MCP_MODE:-docker}"
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY:-}"
+OPENAI_API_KEY = "${OPENAI_API_KEY:-}"
+GEMINI_API_KEY = "${GEMINI_API_KEY:-}"
+SLACK_GYM_MCP_REMOTE_URL = "${SLACK_GYM_MCP_REMOTE_URL:-}"
+SLACK_GYM_MCP_REMOTE_URL_TOKEN = "${SLACK_GYM_MCP_REMOTE_URL_TOKEN:-}"
+JIRA_GYM_MCP_REMOTE_URL = "${JIRA_GYM_MCP_REMOTE_URL:-}"
+JIRA_GYM_MCP_REMOTE_URL_TOKEN = "${JIRA_GYM_MCP_REMOTE_URL_TOKEN:-}"
+ZETA3_SQL_GYM_MCP_REMOTE_URL = "${ZETA3_SQL_GYM_MCP_REMOTE_URL:-}"
+ZETA3_SQL_GYM_MCP_REMOTE_URL_TOKEN = "${ZETA3_SQL_GYM_MCP_REMOTE_URL_TOKEN:-}"
+CONFLUENCE_GYM_MCP_REMOTE_URL = "${CONFLUENCE_GYM_MCP_REMOTE_URL:-}"
+CONFLUENCE_GYM_MCP_REMOTE_URL_TOKEN = "${CONFLUENCE_GYM_MCP_REMOTE_URL_TOKEN:-}"
+GOOGLE_DRIVE_GYM_MCP_REMOTE_URL = "${GOOGLE_DRIVE_GYM_MCP_REMOTE_URL:-}"
+GOOGLE_DRIVE_GYM_MCP_REMOTE_URL_TOKEN = "${GOOGLE_DRIVE_GYM_MCP_REMOTE_URL_TOKEN:-}"
+FRESHDESK_GYM_MCP_REMOTE_URL = "${FRESHDESK_GYM_MCP_REMOTE_URL:-}"
+FRESHDESK_GYM_MCP_REMOTE_URL_TOKEN = "${FRESHDESK_GYM_MCP_REMOTE_URL_TOKEN:-}"
+EMAIL_GYM_MCP_REMOTE_URL = "${EMAIL_GYM_MCP_REMOTE_URL:-}"
+EMAIL_GYM_MCP_REMOTE_URL_TOKEN = "${EMAIL_GYM_MCP_REMOTE_URL_TOKEN:-}"

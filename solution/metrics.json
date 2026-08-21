@@ -1,0 +1,16 @@
+{
+  "cohort": {
+    "account_type": "joint",
+    "original_status": "manual_review",
+    "created_from": "2024-06-01",
+    "created_to": "2024-06-30"
+  },
+  "sweep_date": "2025-04-09",
+  "cohort_size": 116,
+  "aged_out": 50,
+  "resolved_before_sweep": 65,
+  "still_manual_review": 1,
+  "unresolved_person_kyc": 68,
+  "both_applicants_unresolved": 18,
+  "days_in_manual_review": 309
+}

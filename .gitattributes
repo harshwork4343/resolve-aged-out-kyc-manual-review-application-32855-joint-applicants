@@ -1,0 +1,17 @@
+# Shell scripts MUST stay LF (entrypoint.sh shebang breaks on CRLF)
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Python and config files: LF in repo, native on checkout
+*.py text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+Dockerfile text eol=lf
+*.txt text eol=lf
+
+# Binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.webp binary
